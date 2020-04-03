@@ -1,0 +1,7 @@
+server:
+  servlet:
+    context-path: /enigma
+  port: 8081
+spring:
+  application:
+    name: Enigma
