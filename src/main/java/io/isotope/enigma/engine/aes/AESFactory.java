@@ -20,11 +20,14 @@ public class AESFactory {
     private static final Logger log = LoggerFactory.getLogger(AESFactory.class);
 
     private static final String AES = "AES";
+    private static final String BLOCK_MODE = "CBC";
+    private static final String PADDING = "PKCS5Padding";
+    private static final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA256";
     private static final Integer AES_KEY_LENGTH = 256;
 
     public Optional<Key> createKeySpec(KeySpecification keySpecification) {
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance(keySpecification.getSecretKeyFactory());
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY);
             KeySpec spec = new PBEKeySpec(keySpecification.getKey().toCharArray(), keySpecification.getSalt().getBytes(), keySpecification.getIterations(), AES_KEY_LENGTH);
             SecretKey tmp = factory.generateSecret(spec);
             SecretKeySpec secretKeySpec = new SecretKeySpec(tmp.getEncoded(), AES);
@@ -35,20 +38,17 @@ public class AESFactory {
         }
     }
 
-    private Optional<Cipher> cipher(Specification specification, int cipherMode) {
-        String mode = specification.getCipher().getMode();
-        String padding = specification.getCipher().getPadding();
-        byte[] iv = specification.getCipher().getIv(); // 16
+    private Optional<Cipher> cipher(KeySpecification specification, int cipherMode) {
+        byte[] iv = specification.getIv(); // 16
         IvParameterSpec ivspec = new IvParameterSpec(iv);
 
         // TODO: validate fields
 
         try {
-            Key secretKeySpec = createKeySpec(specification.getKey())
+            Key secretKeySpec = createKeySpec(specification)
                     .orElseThrow(() -> new IllegalStateException("Unable to create key specification."));
-//            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 
-            Cipher cipher = Cipher.getInstance(String.format("AES/%s/%s", mode, padding));
+            Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", AES, BLOCK_MODE, PADDING));
             cipher.init(cipherMode, secretKeySpec, ivspec);
 
             return Optional.of(cipher);
@@ -58,12 +58,12 @@ public class AESFactory {
         }
     }
 
-    public Optional<Decoder> decoder(Specification specification) {
+    public Optional<Decoder> decoder(KeySpecification specification) {
         return cipher(specification, Cipher.DECRYPT_MODE)
                 .map(Decoder::new);
     }
 
-    public Optional<Encoder> encoder(Specification specification) {
+    public Optional<Encoder> encoder(KeySpecification specification) {
         return cipher(specification, Cipher.ENCRYPT_MODE)
                 .map(Encoder::new);
     }

@@ -3,10 +3,9 @@ package io.isotope.enigma.engine.aes;
 public class KeySpecification {
 
     private String key;
-    private Integer keyLength;
     private Integer iterations;
     private String salt;
-    private String secretKeyFactory;
+    private byte[] iv;
 
     public String getKey() {
         return key;
@@ -14,15 +13,6 @@ public class KeySpecification {
 
     public KeySpecification setKey(String key) {
         this.key = key;
-        return this;
-    }
-
-    public Integer getKeyLength() {
-        return keyLength;
-    }
-
-    public KeySpecification setKeyLength(Integer keyLength) {
-        this.keyLength = keyLength;
         return this;
     }
 
@@ -44,12 +34,12 @@ public class KeySpecification {
         return this;
     }
 
-    public String getSecretKeyFactory() {
-        return secretKeyFactory;
+    public byte[] getIv() {
+        return iv;
     }
 
-    public KeySpecification setSecretKeyFactory(String secretKeyFactory) {
-        this.secretKeyFactory = secretKeyFactory;
+    public KeySpecification setIv(byte[] iv) {
+        this.iv = iv;
         return this;
     }
 }
