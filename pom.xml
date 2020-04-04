@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.isotope.enigma</groupId>
-	<artifactId>engine</artifactId>
+	<artifactId>decoder</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>engine</name>
+	<name>decoder</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -35,7 +35,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
+					<artifactId>junit-vintage-decoder</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

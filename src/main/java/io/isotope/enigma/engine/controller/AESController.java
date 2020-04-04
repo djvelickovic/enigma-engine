@@ -1,7 +1,9 @@
 package io.isotope.enigma.engine.controller;
 
+import io.isotope.enigma.engine.services.CryptoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +16,26 @@ public class AESController {
 
     private static final Logger log = LoggerFactory.getLogger(AESController.class);
 
+    private CryptoService cryptoService;
+
+    public AESController(CryptoService cryptoService) {
+        this.cryptoService = cryptoService;
+    }
+
     @PostMapping(path = "/encrypt/{key}")
     public ResponseEntity<?> encrypt(@PathVariable("key") String key, @RequestBody Map<String, String> body) {
         log.info(body.toString());
-        return ResponseEntity.ok(body);
+
+        return cryptoService.encrypt(body, key)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @PostMapping(path = "/decrypt/{key}")
     public ResponseEntity<?> decrypt(@PathVariable("key") String key, @RequestBody Map<String, String> body) {
         log.info(body.toString());
-        return ResponseEntity.ok(body);
+        return cryptoService.decrypt(body, key)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 }

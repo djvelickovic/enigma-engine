@@ -58,13 +58,13 @@ public class AESFactory {
         }
     }
 
-    public Optional<Engine> decryptor(Specification specification) {
+    public Optional<Decoder> decoder(Specification specification) {
         return cipher(specification, Cipher.DECRYPT_MODE)
-                .map(Engine::new);
+                .map(Decoder::new);
     }
 
-    public Optional<Engine> encryptor(Specification specification) {
+    public Optional<Encoder> encoder(Specification specification) {
         return cipher(specification, Cipher.ENCRYPT_MODE)
-                .map(Engine::new);
+                .map(Encoder::new);
     }
 }
