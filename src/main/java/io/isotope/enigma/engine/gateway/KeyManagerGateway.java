@@ -20,15 +20,21 @@ public class KeyManagerGateway {
 
     public Optional<KeySpecification> getKeySpecification(String key) {
         log.debug("Fetching key {} specification", key);
-        return WebClient.create(keyManagementUrl+"/keys/"+key)
-                .get()
-                .retrieve()
-                .bodyToMono(KeySpecification.class)
-                .blockOptional(Duration.ofSeconds(10))
-                .map(response -> {
-                    log.info(response.toString());
-                    return response;
-                });
+        try {
+            return WebClient.create(keyManagementUrl + "/keys/" + key)
+                    .get()
+                    .retrieve()
+                    .bodyToMono(KeySpecification.class)
+                    .blockOptional(Duration.ofSeconds(10))
+                    .map(response -> {
+                        log.info(response.toString());
+                        return response;
+                    });
+        }
+        catch (Exception e) {
+            log.error("Error fetching key", e);
+            return Optional.empty();
+        }
     }
 
 }
