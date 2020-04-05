@@ -1,7 +1,7 @@
 package io.isotope.enigma.engine.services;
 
 import io.isotope.enigma.engine.aes.AESFactory;
-import io.isotope.enigma.engine.aes.Mocks;
+import io.isotope.enigma.engine.gateway.KeyManagerGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,12 @@ public class CryptoService {
     private static final Logger log = LoggerFactory.getLogger(CryptoService.class);
 
     private AESFactory aesFactory;
+    private KeyManagerGateway keyManagerGateway;
 
-    public CryptoService(AESFactory aesFactory) {
+
+    public CryptoService(AESFactory aesFactory, KeyManagerGateway keyManagerGateway) {
         this.aesFactory = aesFactory;
+        this.keyManagerGateway = keyManagerGateway;
     }
 
     private Optional<Map<String, String>> process(BiFunction<String, Charset, Optional<String>> engine, Map<String, String> values) {
@@ -41,15 +44,17 @@ public class CryptoService {
     }
 
     public Optional<Map<String, String>> encrypt(Map<String, String> values, String keyName) {
-        return aesFactory.encoder(Mocks.DEFAULT_SPEC)
-                .flatMap(encoder -> process(encoder::encode, values))
-                .map(this::encodeToBase64);
+        return keyManagerGateway.getKeySpecification(keyName)
+                .flatMap(keySpecification -> aesFactory.encoder(keySpecification)
+                        .flatMap(encoder -> process(encoder::encode, values))
+                        .map(this::encodeToBase64));
     }
 
     public Optional<Map<String, String>> decrypt(Map<String, String> values, String keyName) {
-        return decodeBase64(values)
-                .flatMap(decodedValues -> aesFactory.decoder(Mocks.DEFAULT_SPEC)
-                        .flatMap(decoder -> process(decoder::decode, decodedValues)));
+        return keyManagerGateway.getKeySpecification(keyName)
+                .flatMap(keySpecification -> decodeBase64(values)
+                        .flatMap(decodedValues -> aesFactory.decoder(keySpecification)
+                                .flatMap(decoder -> process(decoder::decode, decodedValues))));
     }
 
     private Optional<Map<String, String>> decodeBase64(Map<String, String> values) {

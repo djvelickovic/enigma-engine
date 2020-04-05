@@ -1,11 +1,22 @@
 package io.isotope.enigma.engine.aes;
 
+import java.util.Arrays;
+
 public class KeySpecification {
 
+    private String name;
     private String key;
     private Integer iterations;
     private String salt;
     private byte[] iv;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getKey() {
         return key;
@@ -41,5 +52,16 @@ public class KeySpecification {
     public KeySpecification setIv(byte[] iv) {
         this.iv = iv;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "KeySpecification{" +
+                "name='" + name + '\'' +
+                ", key='" + key + '\'' +
+                ", iterations=" + iterations +
+                ", salt='" + salt + '\'' +
+                ", iv=" + Arrays.toString(iv) +
+                '}';
     }
 }
