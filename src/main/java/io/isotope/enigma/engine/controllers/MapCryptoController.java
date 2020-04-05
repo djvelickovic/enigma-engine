@@ -1,4 +1,4 @@
-package io.isotope.enigma.engine.controller;
+package io.isotope.enigma.engine.controllers;
 
 import io.isotope.enigma.engine.services.CryptoService;
 import org.slf4j.Logger;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/map", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class AESController {
+public class MapCryptoController {
 
-    private static final Logger log = LoggerFactory.getLogger(AESController.class);
+    private static final Logger log = LoggerFactory.getLogger(MapCryptoController.class);
 
     private CryptoService cryptoService;
 
-    public AESController(CryptoService cryptoService) {
+    public MapCryptoController(CryptoService cryptoService) {
         this.cryptoService = cryptoService;
     }
 
