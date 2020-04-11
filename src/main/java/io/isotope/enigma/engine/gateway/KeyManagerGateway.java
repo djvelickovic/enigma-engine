@@ -12,17 +12,17 @@ public class KeyManagerGateway {
 
     private static final Logger log = LoggerFactory.getLogger(KeyManagerGateway.class);
 
-    private final String keyManagementUrl;
+    private final WebClient webClient;
 
-    public KeyManagerGateway(String keyManagementUrl) {
-        this.keyManagementUrl = keyManagementUrl;
+    public KeyManagerGateway(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public Optional<KeySpecification> getKeySpecification(String key) {
         log.debug("Fetching key {} specification", key);
         try {
-            return WebClient.create(keyManagementUrl + "/keys/" + key)
-                    .get()
+            return webClient.get()
+                    .uri("keys/{key}", key)
                     .retrieve()
                     .bodyToMono(KeySpecification.class)
                     .blockOptional(Duration.ofSeconds(10))
