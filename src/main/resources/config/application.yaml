@@ -1,7 +1,11 @@
 server:
+  ssl:
+    enabled: true
   servlet:
     context-path: /enigma
-  port: 8081
+  port: 8444
 spring:
   application:
     name: Enigma
+enigma:
+  http-port: 8081

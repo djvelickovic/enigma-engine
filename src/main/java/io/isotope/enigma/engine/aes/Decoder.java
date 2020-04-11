@@ -11,7 +11,7 @@ import java.util.Optional;
 public class Decoder {
     private static final Logger log = LoggerFactory.getLogger(Decoder.class);
 
-    private Cipher cipher;
+    private final Cipher cipher;
 
     protected Decoder(Cipher cipher) {
         this.cipher = cipher;

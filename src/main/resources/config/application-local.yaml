@@ -1,3 +1,14 @@
-external:
+enigma:
   key-management:
     url: "http://localhost:8082/key-management"
+
+server:
+  ssl:
+    key-alias: enigmaserver
+    key-store-password: 2secure4u
+    key-store-type: pkcs12
+    key-store: classpath:enigmaserver.p12
+    trust-store-password: 2secure4u
+    trust-store-type: pkcs12
+    trust-store: classpath:enigmaserver.p12
+    client-auth: need
