@@ -22,7 +22,7 @@ public class KeyManagerGateway {
         log.debug("Fetching key {} specification", key);
         try {
             return webClient.get()
-                    .uri("keys/{key}", key)
+                    .uri("internal/keys/{key}", key)
                     .retrieve()
                     .bodyToMono(KeySpecification.class)
                     .blockOptional(Duration.ofSeconds(10))
@@ -36,5 +36,4 @@ public class KeyManagerGateway {
             return Optional.empty();
         }
     }
-
 }
