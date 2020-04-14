@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="0.1" author="djovel">
+        <createTable schemaName="enigma" tableName="key">
+            <column name="id" type="varchar(256)" />
+            <column name="key_name" type="varchar(256)" />
+            <column name="key_value" type="varchar(1024)"/>
+            <column name="salt" type="varchar(1024)"/>
+            <column name="initial_vector" type="varchar(256)"/>
+            <column name="iterations" type="int"/>
+            <column name="created" type="timestamp with time zone"/>
+            <column name="updated" type="timestamp with time zone"/>
+            <column name="active" type="boolean"/>
+        </createTable>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="id"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="key_name"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="key_value"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="salt"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="initial_vector"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="iterations"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="created"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="updated"/>
+        <addNotNullConstraint tableName="key" schemaName="enigma" columnName="active"/>
+
+        <addPrimaryKey tableName="key" schemaName="enigma" columnNames="id"/>
+        <addUniqueConstraint tableName="key" schemaName="enigma" columnNames="key_name"/>
+    </changeSet>
+        
+</databaseChangeLog>

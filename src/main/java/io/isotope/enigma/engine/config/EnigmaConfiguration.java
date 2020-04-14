@@ -75,7 +75,7 @@ public class EnigmaConfiguration {
         HttpClient httpConnector = HttpClient.create().secure(t -> t.sslContext(sslContext));
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpConnector))
-                .baseUrl(properties.getKeyManagement().getUrl())
+//                .baseUrl(properties.getKeyManagement().getUrl())
                 .build();
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import java.util.Arrays;
 
-class OnLocalProfile implements Condition {
+public class OnLocalProfile implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {

@@ -1,6 +1,6 @@
 package io.isotope.enigma.engine.gateway;
 
-import io.isotope.enigma.engine.aes.KeySpecification;
+import io.isotope.enigma.engine.services.aes.KeySpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClient;

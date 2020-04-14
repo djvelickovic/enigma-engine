@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Conditional(OnLocalProfile.class)
-public class ServerConfiguration {
+public class DebugServerConfiguration {
 
     @Bean
     public ServletWebServerFactory servletContainer(EnigmaProperties enigmaProperties) {
@@ -24,7 +24,6 @@ public class ServerConfiguration {
         connector.setScheme("http");
         connector.setPort(enigmaProperties.getHttpPort());
         connector.setSecure(false);
-//        connector.setRedirectPort(8443);
         return connector;
     }
 }

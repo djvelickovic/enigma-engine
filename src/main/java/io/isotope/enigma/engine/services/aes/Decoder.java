@@ -1,4 +1,4 @@
-package io.isotope.enigma.engine.aes;
+package io.isotope.enigma.engine.services.aes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,20 +8,20 @@ import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Optional;
 
-public class Encoder {
+public class Decoder {
     private static final Logger log = LoggerFactory.getLogger(Decoder.class);
 
     private final Cipher cipher;
 
-    protected Encoder(Cipher cipher) {
+    protected Decoder(Cipher cipher) {
         this.cipher = cipher;
     }
 
-    public Optional<String> encode(String value, Charset charset) {
+    public Optional<String> decode(String value, Charset charset) {
         try {
-            byte[] encoded = cipher.doFinal(value.getBytes(charset));
-            byte[] base64 = Base64.getEncoder().encode(encoded);
-            return Optional.of(new String(base64, charset));
+            byte[] base64decoded = Base64.getDecoder().decode(value.getBytes(charset));
+            byte[] encoded = cipher.doFinal(base64decoded);
+            return Optional.of(new String(encoded, charset));
         } catch (Exception e) {
             log.error("Error while processing value",e);
             return Optional.empty();

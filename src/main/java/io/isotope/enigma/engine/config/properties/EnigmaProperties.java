@@ -1,5 +1,6 @@
 package io.isotope.enigma.engine.config.properties;
 
+import io.isotope.enigma.engine.services.aes.KeySpecification;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -7,7 +8,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class EnigmaProperties {
 
     @NestedConfigurationProperty
-    private KeyManagementProperties keyManagement;
+    private KeySpecification keySpecification;
 
     private Integer httpPort = 8081;
 
@@ -19,11 +20,5 @@ public class EnigmaProperties {
         this.httpPort = httpPort;
     }
 
-    public KeyManagementProperties getKeyManagement() {
-        return keyManagement;
-    }
 
-    public void setKeyManagement(KeyManagementProperties keyManagement) {
-        this.keyManagement = keyManagement;
-    }
 }

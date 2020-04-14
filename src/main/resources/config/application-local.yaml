@@ -1,6 +1,17 @@
 enigma:
-  key-management:
-    url: "https://localhost:8445/key-management/"
+  key-specification:
+
+spring:
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:/tmp/h2databases/enigma;INIT=create schema if not exists enigma;
+  liquibase:
+    change-log: classpath:/db/changelog-local.xml
 
 server:
   ssl:

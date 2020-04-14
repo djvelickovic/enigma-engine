@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping(path = "/map")
+@RequestMapping(path = "/internal/map")
 @RestController
 public class MapCryptoController {
 

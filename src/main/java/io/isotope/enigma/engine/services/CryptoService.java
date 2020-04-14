@@ -1,6 +1,7 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.aes.AESFactory;
+import io.isotope.enigma.engine.repositories.KeyRepository;
+import io.isotope.enigma.engine.services.aes.AESFactory;
 import io.isotope.enigma.engine.gateway.KeyManagerGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +19,12 @@ public class CryptoService {
 
     private static final Logger log = LoggerFactory.getLogger(CryptoService.class);
 
-    private AESFactory aesFactory;
-    private KeyManagerGateway keyManagerGateway;
+    private final AESFactory aesFactory;
+    private final KeyRepository keyRepository;
 
-
-    public CryptoService(AESFactory aesFactory, KeyManagerGateway keyManagerGateway) {
+    public CryptoService(AESFactory aesFactory, KeyRepository keyRepository) {
         this.aesFactory = aesFactory;
-        this.keyManagerGateway = keyManagerGateway;
+        this.keyRepository = keyRepository;
     }
 
     private Optional<Map<String, String>> process(BiFunction<String, Charset, Optional<String>> engine, Map<String, String> values) {
@@ -44,13 +44,15 @@ public class CryptoService {
     }
 
     public Optional<Map<String, String>> encrypt(Map<String, String> values, String keyName) {
-        return keyManagerGateway.getKeySpecification(keyName)
+        return keyRepository.findByKey(keyName)
+                .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.encoder(keySpecification)
                         .flatMap(encoder -> process(encoder::encode, values)));
     }
 
     public Optional<Map<String, String>> decrypt(Map<String, String> values, String keyName) {
-        return keyManagerGateway.getKeySpecification(keyName)
+        return keyRepository.findByKey(keyName)
+                .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.decoder(keySpecification)
                         .flatMap(decoder -> process(decoder::decode, values)));
     }
