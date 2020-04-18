@@ -43,14 +43,14 @@ public class CryptoService {
     }
 
     public Optional<Map<String, String>> encrypt(Map<String, String> values, String keyName) {
-        return keyRepository.findByKey(keyName)
+        return keyRepository.findByName(keyName)
                 .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.encoder(keySpecification)
                         .flatMap(encoder -> process(encoder::encode, values)));
     }
 
     public Optional<Map<String, String>> decrypt(Map<String, String> values, String keyName) {
-        return keyRepository.findByKey(keyName)
+        return keyRepository.findByName(keyName)
                 .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.decoder(keySpecification)
                         .flatMap(decoder -> process(decoder::decode, values)));

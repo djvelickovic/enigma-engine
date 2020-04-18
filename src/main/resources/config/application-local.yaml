@@ -9,7 +9,7 @@ spring:
   datasource:
     username: sa
     password:
-    url: jdbc:h2:/tmp/h2databases/enigma;INIT=create schema if not exists enigma;
+    url: jdbc:h2:~/h2databases/enigma;INIT=create schema if not exists enigma;
   liquibase:
     change-log: classpath:/db/changelog-local.xml
 

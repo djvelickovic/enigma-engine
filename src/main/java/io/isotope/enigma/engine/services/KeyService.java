@@ -65,11 +65,11 @@ public class KeyService {
     }
 
     public String secretKey() {
-        return randomGenerator.generateRandomString(128);
+        return randomGenerator.generateRandomString(512);
     }
 
     public String salt() {
-        return randomGenerator.generateRandomString(16);
+        return randomGenerator.generateRandomString(256);
     }
 
     public int iterations() {
