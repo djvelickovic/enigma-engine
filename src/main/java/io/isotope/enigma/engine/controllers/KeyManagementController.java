@@ -5,13 +5,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping(value = "/external/keys", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/keys", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class ExternalKeyManagementController {
+public class KeyManagementController {
 
     private final KeyService keyService;
 
-    public ExternalKeyManagementController(KeyService keyService) {
+    public KeyManagementController(KeyService keyService) {
         this.keyService = keyService;
     }
 

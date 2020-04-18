@@ -11,15 +11,6 @@ import java.util.stream.Stream;
 
 public class KeyConverter {
 
-//    public static Key convert(KeySpecification keySpecification) {
-//        Key key = new Key();
-//        key.setKey(keySpecification.getKey());
-//        key.setSalt(keySpecification.getSalt());
-//        key.setIv(convertIV(keySpecification.getIv()));
-//        key.setIterations(keySpecification.getIterations());
-//        return key;
-//    }
-
     public static KeySpecification convert(Key key) {
         KeySpecification keySpecification = new KeySpecification();
         keySpecification.setKey(key.getKey());

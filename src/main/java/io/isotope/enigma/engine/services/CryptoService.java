@@ -2,7 +2,6 @@ package io.isotope.enigma.engine.services;
 
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.AESFactory;
-import io.isotope.enigma.engine.gateway.KeyManagerGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
