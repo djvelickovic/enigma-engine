@@ -25,7 +25,7 @@ public class AESFactory {
     private static final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA256";
     private static final Integer AES_KEY_LENGTH = 256;
 
-    public Optional<Key> createKeySpec(KeySpecification keySpecification) {
+    private Optional<Key> createKeySpec(KeySpecification keySpecification) {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY);
             KeySpec spec = new PBEKeySpec(keySpecification.getKey().toCharArray(), keySpecification.getSalt().getBytes(), keySpecification.getIterations(), AES_KEY_LENGTH);

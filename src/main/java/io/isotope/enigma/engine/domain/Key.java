@@ -17,12 +17,15 @@ public class Key {
     @Column(name = "key_name")
     private String name;
 
+    @Encrypted
     @Column(name = "key_value")
     private String key;
 
+    @Encrypted
     @Column(name = "salt")
     private String salt;
 
+    @Encrypted
     @Column(name = "initial_vector")
     private String iv;
 

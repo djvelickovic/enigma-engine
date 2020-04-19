@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface KeyRepository extends CrudRepository<Key, String> {
 
-    public Optional<Key> findByName(String keyName);
+    Optional<Key> findByName(String keyName);
 }

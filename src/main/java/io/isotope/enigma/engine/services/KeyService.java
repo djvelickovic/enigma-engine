@@ -4,6 +4,7 @@ import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.KeySpecification;
+import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,10 +21,12 @@ public class KeyService {
 
     private final KeyRepository keyRepository;
     private final RandomGenerator randomGenerator;
+    private final DatabaseCrypto databaseCrypto;
 
-    public KeyService(KeyRepository keyRepository, RandomGenerator randomGenerator) {
+    public KeyService(KeyRepository keyRepository, RandomGenerator randomGenerator, DatabaseCrypto databaseCrypto) {
         this.keyRepository = keyRepository;
         this.randomGenerator = randomGenerator;
+        this.databaseCrypto = databaseCrypto;
     }
 
     public List<KeySpecificationReduced> getAllKeys() {
@@ -33,7 +36,8 @@ public class KeyService {
     }
 
     public Optional<KeySpecification> getKey(String keyName) {
-        return keyRepository.findById(keyName)
+        return keyRepository.findByName(keyName)
+                .map(databaseCrypto::decrypt)
                 .map(KeyConverter::convert);
     }
 
@@ -49,6 +53,7 @@ public class KeyService {
         newKey.setIv(generateIV());
         newKey.setSalt(salt());
         newKey.setKey(secretKey());
+        databaseCrypto.encrypt(newKey);
         keyRepository.save(newKey);
     }
 

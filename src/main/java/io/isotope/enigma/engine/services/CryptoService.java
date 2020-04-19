@@ -2,6 +2,7 @@ package io.isotope.enigma.engine.services;
 
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.AESFactory;
+import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class CryptoService {
 
     private final AESFactory aesFactory;
     private final KeyRepository keyRepository;
+    private DatabaseCrypto databaseCrypto;
 
-    public CryptoService(AESFactory aesFactory, KeyRepository keyRepository) {
+    public CryptoService(AESFactory aesFactory, KeyRepository keyRepository, DatabaseCrypto databaseCrypto) {
         this.aesFactory = aesFactory;
         this.keyRepository = keyRepository;
+        this.databaseCrypto = databaseCrypto;
     }
 
     private Optional<Map<String, String>> process(BiFunction<String, Charset, Optional<String>> engine, Map<String, String> values) {
@@ -44,6 +47,7 @@ public class CryptoService {
 
     public Optional<Map<String, String>> encrypt(Map<String, String> values, String keyName) {
         return keyRepository.findByName(keyName)
+                .map(key -> databaseCrypto.decrypt(key))
                 .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.encoder(keySpecification)
                         .flatMap(encoder -> process(encoder::encode, values)));
@@ -51,6 +55,7 @@ public class CryptoService {
 
     public Optional<Map<String, String>> decrypt(Map<String, String> values, String keyName) {
         return keyRepository.findByName(keyName)
+                .map(key -> databaseCrypto.decrypt(key))
                 .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.decoder(keySpecification)
                         .flatMap(decoder -> process(decoder::decode, values)));
