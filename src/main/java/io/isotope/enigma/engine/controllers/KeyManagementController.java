@@ -30,14 +30,6 @@ public class KeyManagementController {
         return ResponseEntity.ok(keyService.getAllKeys());
     }
 
-    @GetMapping("{key}")
-    public ResponseEntity<?> getKey(@PathVariable String key) {
-        return keyService.getKey(key)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createKey(@RequestBody KeySpecificationReduced keySpecification) {
         // validate

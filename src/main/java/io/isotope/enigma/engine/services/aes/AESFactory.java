@@ -14,16 +14,12 @@ import java.security.Key;
 import java.security.spec.KeySpec;
 import java.util.Optional;
 
+import static io.isotope.enigma.engine.services.aes.AES.*;
+
 @Component
 public class AESFactory {
 
     private static final Logger log = LoggerFactory.getLogger(AESFactory.class);
-
-    private static final String AES = "AES";
-    private static final String BLOCK_MODE = "CBC";
-    private static final String PADDING = "PKCS5Padding";
-    private static final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA256";
-    private static final Integer AES_KEY_LENGTH = 256;
 
     private Optional<Key> createKeySpec(KeySpecification keySpecification) {
         try {

@@ -21,7 +21,7 @@ public class CryptoService {
 
     private final AESFactory aesFactory;
     private final KeyRepository keyRepository;
-    private DatabaseCrypto databaseCrypto;
+    private final DatabaseCrypto databaseCrypto;
 
     public CryptoService(AESFactory aesFactory, KeyRepository keyRepository, DatabaseCrypto databaseCrypto) {
         this.aesFactory = aesFactory;
@@ -47,7 +47,7 @@ public class CryptoService {
 
     public Optional<Map<String, String>> encrypt(Map<String, String> values, String keyName) {
         return keyRepository.findByName(keyName)
-                .map(key -> databaseCrypto.decrypt(key))
+                .map(databaseCrypto::decrypt)
                 .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.encoder(keySpecification)
                         .flatMap(encoder -> process(encoder::encode, values)));
@@ -55,7 +55,7 @@ public class CryptoService {
 
     public Optional<Map<String, String>> decrypt(Map<String, String> values, String keyName) {
         return keyRepository.findByName(keyName)
-                .map(key -> databaseCrypto.decrypt(key))
+                .map(databaseCrypto::decrypt)
                 .map(KeyConverter::convert)
                 .flatMap(keySpecification -> aesFactory.decoder(keySpecification)
                         .flatMap(decoder -> process(decoder::decode, values)));

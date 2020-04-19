@@ -1,10 +1,13 @@
 package io.isotope.enigma.engine.services;
 
+import io.isotope.enigma.engine.config.properties.EnigmaProperties;
 import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.KeySpecification;
 import io.isotope.enigma.engine.services.db.DatabaseCrypto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,26 +22,24 @@ import java.util.stream.StreamSupport;
 @Service
 public class KeyService {
 
+    private static final Logger logger = LoggerFactory.getLogger(KeyService.class);
+
     private final KeyRepository keyRepository;
     private final RandomGenerator randomGenerator;
     private final DatabaseCrypto databaseCrypto;
+    private final EnigmaProperties enigmaProperties;
 
-    public KeyService(KeyRepository keyRepository, RandomGenerator randomGenerator, DatabaseCrypto databaseCrypto) {
+    public KeyService(KeyRepository keyRepository, RandomGenerator randomGenerator, DatabaseCrypto databaseCrypto, EnigmaProperties enigmaProperties) {
         this.keyRepository = keyRepository;
         this.randomGenerator = randomGenerator;
         this.databaseCrypto = databaseCrypto;
+        this.enigmaProperties = enigmaProperties;
     }
 
     public List<KeySpecificationReduced> getAllKeys() {
         return StreamSupport.stream(keyRepository.findAll().spliterator(), false)
                 .map(KeyConverter::convertReduced)
                 .collect(Collectors.toList());
-    }
-
-    public Optional<KeySpecification> getKey(String keyName) {
-        return keyRepository.findByName(keyName)
-                .map(databaseCrypto::decrypt)
-                .map(KeyConverter::convert);
     }
 
     @Transactional
@@ -58,7 +59,7 @@ public class KeyService {
     }
 
 
-    public String generateIV() {
+    private String generateIV() {
         byte[] iv = randomGenerator.generateRandomByteArray(16);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 16; i++) {
@@ -69,16 +70,16 @@ public class KeyService {
         return sb.toString();
     }
 
-    public String secretKey() {
+    private String secretKey() {
         return randomGenerator.generateRandomString(512);
     }
 
-    public String salt() {
-        return randomGenerator.generateRandomString(256);
+    private String salt() {
+            return randomGenerator.generateRandomString(256);
     }
 
-    public int iterations() {
-        return randomGenerator.randomInt(1024) + 65536;
+    private int iterations() {
+        return 65536;
     }
 
     @Transactional
