@@ -19,6 +19,4 @@ public class EnigmaProperties {
     public void setHttpPort(Integer httpPort) {
         this.httpPort = httpPort;
     }
-
-
 }
