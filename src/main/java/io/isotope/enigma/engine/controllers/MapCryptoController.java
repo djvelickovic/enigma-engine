@@ -24,26 +24,12 @@ public class MapCryptoController {
     }
 
     @PostMapping(path = "/encrypt/{key}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> encrypt(@PathVariable("key") String key, @RequestBody Map<String, String> body) {
-        log.info(body.toString());
-
-        return cryptoService.encrypt(body, key)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    public ResponseEntity<Map<String, String>> encrypt(@PathVariable("key") String key, @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok().body(cryptoService.encrypt(body, key));
     }
 
     @PostMapping(path = "/decrypt/{key}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> decrypt(@PathVariable("key") String key, @RequestBody Map<String, String> body) {
-        log.info(body.toString());
-        return cryptoService.decrypt(body, key)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-    }
-
-    @GetMapping
-    public ResponseEntity<?> test() {
-        Map<String, String> ok = new HashMap<>();
-        ok.put("status", "OK");
-        return ResponseEntity.ok(ok);
+    public ResponseEntity<Map<String, String>> decrypt(@PathVariable("key") String key, @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok().body(cryptoService.decrypt(body, key));
     }
 }

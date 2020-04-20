@@ -4,25 +4,21 @@ import io.isotope.enigma.engine.config.properties.EnigmaProperties;
 import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.repositories.KeyRepository;
-import io.isotope.enigma.engine.services.aes.KeySpecification;
+import io.isotope.enigma.engine.services.aes.AES;
 import io.isotope.enigma.engine.services.db.DatabaseCrypto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
 public class KeyService {
-
-    private static final Logger logger = LoggerFactory.getLogger(KeyService.class);
 
     private final KeyRepository keyRepository;
     private final RandomGenerator randomGenerator;
@@ -50,7 +46,7 @@ public class KeyService {
         newKey.setActive(Boolean.TRUE);
         newKey.setCreated(LocalDateTime.now(ZoneId.of("UTC")));
         newKey.setUpdated(newKey.getCreated());
-        newKey.setIterations(iterations());
+        newKey.setIterations(enigmaProperties.getIterations());
         newKey.setIv(generateIV());
         newKey.setSalt(salt());
         newKey.setKey(secretKey());
@@ -60,30 +56,27 @@ public class KeyService {
 
 
     private String generateIV() {
-        byte[] iv = randomGenerator.generateRandomByteArray(16);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
-            sb.append(iv[i]);
-            sb.append(',');
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        byte[] iv = randomGenerator.generateRandomByteArray(AES.AES_INITIAL_VECTOR_LENGTH);
+        return KeyConverter.convertIV(iv);
     }
 
     private String secretKey() {
-        return randomGenerator.generateRandomString(512);
+        return randomGenerator.generateRandomString(enigmaProperties.getPrivateKeyLength());
     }
 
     private String salt() {
-            return randomGenerator.generateRandomString(256);
-    }
-
-    private int iterations() {
-        return 65536;
+            return randomGenerator.generateRandomString(enigmaProperties.getSaltLength());
     }
 
     @Transactional
-    public void updateKey(String keyName) {
-//        keyRepository.deleteById(keyName);
+    public void updateKey(String keyName, Boolean active) {
+        keyRepository.findByName(keyName)
+                .map(k -> {
+                    k.setActive(active);
+                    k.setUpdated(LocalDateTime.now(ZoneId.of("UTC")));
+                    keyRepository.save(k);
+                    return k;
+                })
+                .orElseThrow(() -> new KeyNotFoundException("Key does not exist " + keyName));
     }
 }

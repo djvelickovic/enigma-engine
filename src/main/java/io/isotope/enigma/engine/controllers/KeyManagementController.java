@@ -1,6 +1,8 @@
 package io.isotope.enigma.engine.controllers;
 
 import io.isotope.enigma.engine.services.KeyService;
+import io.isotope.enigma.engine.services.aes.KeySpecification;
+import io.isotope.enigma.engine.services.exceptions.EnigmaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,39 +28,26 @@ public class KeyManagementController {
 
     @GetMapping
     public ResponseEntity<?> getKeys() {
-        logger.info("Fetching keys...");
         return ResponseEntity.ok(keyService.getAllKeys());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createKey(@RequestBody KeySpecificationReduced keySpecification) {
-        // validate
-        return validate(keySpecification.getName())
-                .map(error -> ResponseEntity.badRequest().body(error))
-                .orElseGet(() -> {
-                    keyService.addKey(keySpecification);
-                    return ResponseEntity.ok().build();
-                });
-    }
 
-    @DeleteMapping("{key}")
-    public ResponseEntity<?> deactivateKey(@PathVariable String key) {
-        keyService.updateKey(key);
+        if (StringUtils.isEmpty(keySpecification.getName())) {
+            throw new EnigmaException("Key cannot be empty");
+        }
+        if (!Pattern.matches("([a-zA-Z0-9]+\\.*)+", keySpecification.getName())) {
+            throw new EnigmaException("Invalid key pattern. Key name must contain only letters, numbers and dots.");
+        }
+
+        keyService.addKey(keySpecification);
         return ResponseEntity.ok().build();
     }
 
-
-    public Optional<ErrorResponse> validate(String keyName) {
-        if (StringUtils.isEmpty(keyName)) {
-            return Optional.of(new ErrorResponse()
-                    .setCode("BAD_REQUEST")
-                    .setDescription("Key cannot be empty."));
-        }
-        if (!Pattern.matches("([a-zA-Z0-9]+\\.*)+", keyName)) {
-            return Optional.of(new ErrorResponse()
-                    .setCode("BAD_REQUEST")
-                    .setDescription("Invalid key pattern. Key name must contain only letters, numbers and dots."));
-        }
-        return Optional.empty();
+    @PutMapping("{key}")
+    public ResponseEntity<?> updateKey(@PathVariable String key, @RequestBody KeySpecificationReduced keySpecificationReduced) {
+        keyService.updateKey(key, keySpecificationReduced.getActive());
+        return ResponseEntity.ok().build();
     }
 }

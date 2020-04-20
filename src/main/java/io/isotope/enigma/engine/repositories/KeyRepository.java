@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface KeyRepository extends CrudRepository<Key, String> {
 
     Optional<Key> findByName(String keyName);
+
+    Optional<Key> findByNameAndActiveTrue(String keyName);
+
 }

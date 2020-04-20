@@ -1,8 +1,7 @@
 package io.isotope.enigma.engine.services.aes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import io.isotope.enigma.engine.services.exceptions.AesException;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -12,55 +11,48 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.spec.KeySpec;
-import java.util.Optional;
 
+import static io.isotope.enigma.engine.services.aes.AES.AES;
 import static io.isotope.enigma.engine.services.aes.AES.*;
 
-@Component
+@Service
 public class AESFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(AESFactory.class);
-
-    private Optional<Key> createKeySpec(KeySpecification keySpecification) {
+    private Key createKeySpec(KeySpecification keySpecification) {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY);
             KeySpec spec = new PBEKeySpec(keySpecification.getKey().toCharArray(), keySpecification.getSalt().getBytes(), keySpecification.getIterations(), AES_KEY_LENGTH);
             SecretKey tmp = factory.generateSecret(spec);
-            SecretKeySpec secretKeySpec = new SecretKeySpec(tmp.getEncoded(), AES);
-            return Optional.of(secretKeySpec);
+            return new SecretKeySpec(tmp.getEncoded(), AES);
         } catch (Exception e) {
-            log.error("Error while creating key", e);
-            return Optional.empty();
+            throw new AesException("Error while creating key", e);
         }
     }
 
-    private Optional<Cipher> cipher(KeySpecification specification, int cipherMode) {
-        byte[] iv = specification.getIv(); // 16
-        IvParameterSpec ivspec = new IvParameterSpec(iv);
-
-        // TODO: validate fields
+    private Cipher cipher(KeySpecification specification, int cipherMode) {
+        if (specification.getIv() == null || specification.getIv().length != AES_INITIAL_VECTOR_LENGTH) {
+            throw new IllegalArgumentException("Initial vector length must be "+AES_INITIAL_VECTOR_LENGTH);
+        }
+        if (cipherMode != Cipher.DECRYPT_MODE && cipherMode != Cipher.ENCRYPT_MODE) {
+            throw new IllegalArgumentException("Invalid cipher mode "+cipherMode);
+        }
 
         try {
-            Key secretKeySpec = createKeySpec(specification)
-                    .orElseThrow(() -> new IllegalStateException("Unable to create key specification."));
-
+            IvParameterSpec ivspec = new IvParameterSpec(specification.getIv());
+            Key secretKeySpec = createKeySpec(specification);
             Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", AES, BLOCK_MODE, PADDING));
             cipher.init(cipherMode, secretKeySpec, ivspec);
-
-            return Optional.of(cipher);
+            return cipher;
         } catch (Exception e) {
-            log.error("Error producing cipher", e);
-            return Optional.empty();
+            throw new AesException("Error producing cipher", e);
         }
     }
 
-    public Optional<Decoder> decoder(KeySpecification specification) {
-        return cipher(specification, Cipher.DECRYPT_MODE)
-                .map(Decoder::new);
+    public Decryptor decryptor(KeySpecification specification) {
+        return new Decryptor(cipher(specification, Cipher.DECRYPT_MODE));
     }
 
-    public Optional<Encoder> encoder(KeySpecification specification) {
-        return cipher(specification, Cipher.ENCRYPT_MODE)
-                .map(Encoder::new);
+    public Encryptor encryptor(KeySpecification specification) {
+        return new Encryptor(cipher(specification, Cipher.ENCRYPT_MODE));
     }
 }
