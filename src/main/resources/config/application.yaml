@@ -9,3 +9,7 @@ spring:
     name: Enigma
 enigma:
   http-port: 8081
+  iterations: 65536
+  private-key-length: 512
+  salt-length: 256
+  encrypt-database: false
