@@ -1,5 +1,4 @@
 enigma:
-  http-port: 11080
   key-specification:
     key: "key1234"
     iterations: 65536
@@ -8,14 +7,10 @@ enigma:
   encrypt-database: true
 
 spring:
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
   datasource:
-    username: sa
-    password:
-    url: jdbc:h2:~/h2databases/enigma-enc;INIT=create schema if not exists enigma;
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://enigma-postgresql-svc:5432/enigma
   liquibase:
     change-log: classpath:/db/changelog-local.xml
 
@@ -31,7 +26,7 @@ server:
     client-auth: need
 
 keycloak:
-  auth-server-url: http://localhost:8082/auth
+  auth-server-url: http://enigma-keycloak-svc:12080/auth
   realm: enigma
   resource: enigma-engine
   ssl-required: external

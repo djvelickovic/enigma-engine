@@ -3,12 +3,11 @@ server:
     enabled: true
   servlet:
     context-path: /enigma
-  port: 8444
+  port: 11443
 spring:
   application:
     name: Enigma
 enigma:
-  http-port: 8081
   iterations: 65536
   private-key-length: 512
   salt-length: 256
