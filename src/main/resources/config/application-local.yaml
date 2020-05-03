@@ -27,8 +27,10 @@ server:
     client-auth: need
 
 keycloak:
-  auth-server-url: http://localhost:12080/auth
+  auth-server-url: https://localhost:12443/auth
   realm: enigma
   resource: enigma-engine
   ssl-required: external
   bearer-only: true
+  truststore: classpath:enigmaserver.p12
+  truststore-password: 2secure4u

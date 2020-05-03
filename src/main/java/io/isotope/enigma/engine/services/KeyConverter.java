@@ -24,6 +24,7 @@ public class KeyConverter {
         KeySpecificationReduced keySpecification = new KeySpecificationReduced();
         keySpecification.setName(key.getName());
         keySpecification.setCreated(key.getCreated());
+        keySpecification.setUpdated(key.getUpdated());
         keySpecification.setActive(key.getActive());
         return keySpecification;
     }

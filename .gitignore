@@ -29,6 +29,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-/scripts/*.p12
-/scripts/*.crt
