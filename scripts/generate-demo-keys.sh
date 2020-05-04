@@ -12,3 +12,4 @@ keytool -import -alias enigmaserver -file enigmaserver.crt -keystore enigmaclien
 
 keytool -import -alias server -file server.crt -keystore enigmaserver.p12 -storepass ${PASSWORD} -noprompt
 keytool -import -alias server -file server.crt -keystore enigmabackoffice.p12 -storepass ${PASSWORD} -noprompt
+keytool -import -alias server -file server.crt -keystore enigmaclient.p12 -storepass ${PASSWORD} -noprompt
