@@ -22,15 +22,8 @@ public class Key {
     private String key;
 
     @Encrypted
-    @Column(name = "salt")
-    private String salt;
-
-    @Encrypted
     @Column(name = "initial_vector")
     private String iv;
-
-    @Column(name = "iterations")
-    private Integer iterations;
 
     @Column(name = "created")
     private LocalDateTime created;
@@ -65,13 +58,6 @@ public class Key {
         this.key = key;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 
     public String getIv() {
         return iv;
@@ -81,13 +67,6 @@ public class Key {
         this.iv = iv;
     }
 
-    public Integer getIterations() {
-        return iterations;
-    }
-
-    public void setIterations(Integer iterations) {
-        this.iterations = iterations;
-    }
 
     public LocalDateTime getCreated() {
         return created;

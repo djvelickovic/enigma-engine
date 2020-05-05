@@ -4,7 +4,9 @@ import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.services.aes.KeySpecification;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,10 +15,8 @@ public class KeyConverter {
 
     public static KeySpecification convert(Key key) {
         KeySpecification keySpecification = new KeySpecification();
-        keySpecification.setKey(key.getKey());
-        keySpecification.setSalt(key.getSalt());
-        keySpecification.setIv(convertIV(key.getIv()));
-        keySpecification.setIterations(key.getIterations());
+        keySpecification.setKey(b64decode(stringToBytes(key.getKey())));
+        keySpecification.setIv(b64decode(stringToBytes(key.getIv())));
         return keySpecification;
     }
 
@@ -29,23 +29,19 @@ public class KeyConverter {
         return keySpecification;
     }
 
-    public static byte[] convertIV(String iv) {
-        List<Byte> listBytes = Stream.of(iv.split(","))
-                .map(String::trim)
-                .map(Byte::valueOf)
-                .collect(Collectors.toList());
-        byte[] bytes = new byte[listBytes.size()];
-        for (int i = 0; i < listBytes.size(); i++) {
-            bytes[i] = listBytes.get(i);
-        }
-        return bytes;
+    public static byte[] b64encode(byte[] value) {
+        return Base64.getEncoder().encode(value);
     }
 
-    public static String convertIV(byte[] iv) {
-        List<String> value = new ArrayList<>();
-        for (byte b : iv) {
-            value.add(Byte.toString(b));
-        }
-        return String.join(",", value);
+    public static byte[] b64decode(byte[] value) {
+        return Base64.getDecoder().decode(value);
+    }
+
+    public static String bytesToString(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static byte[] stringToBytes(String value) {
+        return value.getBytes(StandardCharsets.UTF_8);
     }
 }

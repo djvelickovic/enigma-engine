@@ -31,10 +31,8 @@ public class DebugKeyService {
                     debugKeySpecification.setActive(key.getActive());
                     debugKeySpecification.setCreated(key.getCreated());
                     debugKeySpecification.setUpdated(key.getUpdated());
-                    debugKeySpecification.setIterations(key.getIterations());
                     debugKeySpecification.setIv(key.getIv());
                     debugKeySpecification.setKey(key.getKey());
-                    debugKeySpecification.setSalt(key.getSalt());
                     return debugKeySpecification;
                 });
     }

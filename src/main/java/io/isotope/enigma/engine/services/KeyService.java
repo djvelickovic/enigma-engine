@@ -5,6 +5,7 @@ import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.AES;
+import io.isotope.enigma.engine.services.aes.KeySpecification;
 import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import static io.isotope.enigma.engine.services.KeyConverter.*;
 
 @Service
 public class KeyService {
@@ -39,33 +42,20 @@ public class KeyService {
     }
 
     @Transactional
-    public void addKey(KeySpecificationReduced key) {
-        Key newKey = new Key();
-        newKey.setId(UUID.randomUUID().toString());
-        newKey.setName(key.getName());
-        newKey.setActive(Boolean.TRUE);
-        newKey.setCreated(LocalDateTime.now(ZoneId.of("UTC")));
-        newKey.setUpdated(newKey.getCreated());
-        newKey.setIterations(enigmaProperties.getIterations());
-        newKey.setIv(generateIV());
-        newKey.setSalt(salt());
-        newKey.setKey(secretKey());
-        databaseCrypto.encrypt(newKey);
-        keyRepository.save(newKey);
-    }
+    public void generateAndAddKey(String keyName) {
+        Key key = new Key();
+        key.setId(UUID.randomUUID().toString());
+        key.setName(keyName);
+        key.setActive(Boolean.TRUE);
+        key.setCreated(LocalDateTime.now(ZoneId.of("UTC")));
+        key.setUpdated(key.getCreated());
 
+        KeySpecification generatedKey = AES.generateKey();
+        key.setKey(bytesToString(b64encode(generatedKey.getKey())));
+        key.setIv(bytesToString(b64encode(generatedKey.getIv())));
 
-    private String generateIV() {
-        byte[] iv = randomGenerator.generateRandomByteArray(AES.AES_INITIAL_VECTOR_LENGTH);
-        return KeyConverter.convertIV(iv);
-    }
-
-    private String secretKey() {
-        return randomGenerator.generateRandomString(enigmaProperties.getPrivateKeyLength());
-    }
-
-    private String salt() {
-            return randomGenerator.generateRandomString(enigmaProperties.getSaltLength());
+        databaseCrypto.encrypt(key);
+        keyRepository.save(key);
     }
 
     @Transactional

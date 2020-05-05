@@ -2,36 +2,15 @@ package io.isotope.enigma.engine.services.aes;
 
 public class KeySpecification {
 
-    private String key;
-    private Integer iterations;
-    private String salt;
+    private byte[] key;
     private byte[] iv;
 
-    public String getKey() {
+    public byte[] getKey() {
         return key;
     }
 
-    public KeySpecification setKey(String key) {
+    public void setKey(byte[] key) {
         this.key = key;
-        return this;
-    }
-
-    public Integer getIterations() {
-        return iterations;
-    }
-
-    public KeySpecification setIterations(Integer iterations) {
-        this.iterations = iterations;
-        return this;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public KeySpecification setSalt(String salt) {
-        this.salt = salt;
-        return this;
     }
 
     public byte[] getIv() {

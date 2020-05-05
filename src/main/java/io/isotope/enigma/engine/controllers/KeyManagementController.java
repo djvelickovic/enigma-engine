@@ -41,7 +41,7 @@ public class KeyManagementController {
             throw new EnigmaException("Invalid key pattern. Key name must contain only letters, numbers and dots.");
         }
 
-        keyService.addKey(keySpecification);
+        keyService.generateAndAddKey(keySpecification.getName());
         return ResponseEntity.ok().build();
     }
 

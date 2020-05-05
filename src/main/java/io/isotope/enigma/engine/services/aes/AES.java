@@ -1,13 +1,32 @@
 package io.isotope.enigma.engine.services.aes;
 
+import java.security.SecureRandom;
+
 public final class AES {
 
-    public static final String AES = "AES";
+    private static final SecureRandom secure = new SecureRandom();
+
+    public static final String NAME = "AES";
     public static final String BLOCK_MODE = "CBC";
     public static final String PADDING = "PKCS5Padding";
-    public static final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA256";
     public static final Integer AES_KEY_LENGTH = 256;
-    public static final Integer AES_INITIAL_VECTOR_LENGTH = 16;
+    public static final Integer BLOCK_SIZE = 128;
 
     private AES() { }
+
+
+    public static KeySpecification generateKey() {
+        KeySpecification keySpecification = new KeySpecification();
+
+        byte[] key = new byte[AES_KEY_LENGTH / 8];
+        byte[] iv = new byte[BLOCK_SIZE / 8];
+
+        secure.nextBytes(key);
+        secure.nextBytes(iv);
+
+        keySpecification.setKey(key);
+        keySpecification.setIv(iv);
+
+        return keySpecification;
+    }
 }
