@@ -1,5 +1,4 @@
 enigma:
-  http-port: 11080
   key-specification:
     key: "key1234"
     iterations: 65536

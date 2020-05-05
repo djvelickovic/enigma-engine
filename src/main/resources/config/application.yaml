@@ -8,6 +8,7 @@ spring:
   application:
     name: Enigma
 enigma:
+  http-port: 11080
   iterations: 65536
   private-key-length: 512
   salt-length: 256
