@@ -17,7 +17,7 @@ public class MapStringEncryptor implements Encryptor<Map<String, String>, Map<St
         return value.entrySet().stream()
                 .filter(v -> Objects.nonNull(v.getKey()))
                 .filter(v -> Objects.nonNull(v.getValue()))
-                .map(v -> Map.entry(v.getKey(), stringEncryptor.encrypt(v.getKey())))
+                .map(v -> Map.entry(v.getKey(), stringEncryptor.encrypt(v.getValue())))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

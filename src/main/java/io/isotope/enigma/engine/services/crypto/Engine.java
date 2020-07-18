@@ -15,19 +15,21 @@ public class Engine {
         this.cipher = cipher;
     }
 
-    public <I extends InputStream, O extends OutputStream> void process(I is, O os) {
+    public void process(InputStream is, OutputStream os) {
         byte[] readBuffer = new byte[BUFFER_SIZE];
         byte[] encBuffer = new byte[BUFFER_SIZE];
 
         try {
             int encoded;
             int read;
+
             while (true) {
                 read = is.read(readBuffer);
 
                 if (read < BUFFER_SIZE) {
                     encoded = cipher.doFinal(readBuffer, 0, read, encBuffer);
                     os.write(encBuffer, 0, encoded);
+                    os.flush();
                     break;
                 }
 

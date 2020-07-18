@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Configuration;
 public class EnigmaConfiguration {
 
     @Bean
-    public DatabaseCrypto databaseCrypto(AESFactory aesFactory, EnigmaProperties enigmaProperties) {
+    public DatabaseCrypto databaseCrypto(EnigmaProperties enigmaProperties) {
         if (!enigmaProperties.getEncryptDatabase()) {
             return new DatabaseCryptoMock();
         }
-        return new DatabaseCryptoService(enigmaProperties.getKeySpecification(), aesFactory);
+        return new DatabaseCryptoService(enigmaProperties.getKeySpecification());
     }
 
 }

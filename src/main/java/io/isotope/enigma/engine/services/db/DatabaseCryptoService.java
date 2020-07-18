@@ -3,8 +3,6 @@ package io.isotope.enigma.engine.services.db;
 import io.isotope.enigma.engine.domain.Encrypted;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.services.aes.AESFactory;
-import io.isotope.enigma.engine.services.crypto.Decryptor;
-import io.isotope.enigma.engine.services.crypto.Encryptor;
 import io.isotope.enigma.engine.services.aes.KeySpecification;
 import io.isotope.enigma.engine.services.crypto.StringDecryptor;
 import io.isotope.enigma.engine.services.crypto.StringEncryptor;
@@ -16,11 +14,9 @@ import java.nio.charset.StandardCharsets;
 public class DatabaseCryptoService implements DatabaseCrypto {
 
     private final KeySpecification dbKeySpecification;
-    private final AESFactory aesFactory;
 
-    public DatabaseCryptoService(KeySpecification dbKeySpecification, AESFactory aesFactory) {
+    public DatabaseCryptoService(KeySpecification dbKeySpecification) {
         this.dbKeySpecification = dbKeySpecification;
-        this.aesFactory = aesFactory;
     }
 
     @Override
