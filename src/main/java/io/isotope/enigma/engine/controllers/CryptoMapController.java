@@ -13,13 +13,11 @@ import java.util.Map;
 
 @RequestMapping(path = "/crypto/map")
 @RestController
-public class MapCryptoController {
-
-    private static final Logger log = LoggerFactory.getLogger(MapCryptoController.class);
+public class CryptoMapController {
 
     private final CryptoService cryptoService;
 
-    public MapCryptoController(CryptoService cryptoService) {
+    public CryptoMapController(CryptoService cryptoService) {
         this.cryptoService = cryptoService;
     }
 

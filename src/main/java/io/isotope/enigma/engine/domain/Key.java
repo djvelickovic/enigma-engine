@@ -67,7 +67,6 @@ public class Key {
         this.iv = iv;
     }
 
-
     public LocalDateTime getCreated() {
         return created;
     }
