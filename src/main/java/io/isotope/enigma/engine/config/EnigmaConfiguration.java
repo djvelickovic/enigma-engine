@@ -20,5 +20,4 @@ public class EnigmaConfiguration {
         }
         return new DatabaseCryptoService(enigmaProperties.getKeySpecification());
     }
-
 }

@@ -1,6 +1,5 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.config.properties.EnigmaProperties;
 import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.repositories.KeyRepository;
@@ -24,15 +23,11 @@ import static io.isotope.enigma.engine.services.KeyConverter.*;
 public class KeyService {
 
     private final KeyRepository keyRepository;
-    private final RandomGenerator randomGenerator;
     private final DatabaseCrypto databaseCrypto;
-    private final EnigmaProperties enigmaProperties;
 
-    public KeyService(KeyRepository keyRepository, RandomGenerator randomGenerator, DatabaseCrypto databaseCrypto, EnigmaProperties enigmaProperties) {
+    public KeyService(KeyRepository keyRepository, DatabaseCrypto databaseCrypto) {
         this.keyRepository = keyRepository;
-        this.randomGenerator = randomGenerator;
         this.databaseCrypto = databaseCrypto;
-        this.enigmaProperties = enigmaProperties;
     }
 
     public List<KeySpecificationReduced> getAllKeys() {
