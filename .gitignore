@@ -29,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/keycloak/keycloak-11.0.2/
+/keycloak/keycloak-11.0.2.zip
+/keycloak/org/
