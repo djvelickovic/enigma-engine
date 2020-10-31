@@ -2,6 +2,7 @@ package io.isotope.enigma.engine.services.db;
 
 import io.isotope.enigma.engine.domain.Encrypted;
 import io.isotope.enigma.engine.domain.Key;
+import io.isotope.enigma.engine.services.aes.AES;
 import io.isotope.enigma.engine.services.aes.AESFactory;
 import io.isotope.enigma.engine.services.aes.KeySpecification;
 import io.isotope.enigma.engine.services.crypto.StringDecryptor;
@@ -21,7 +22,7 @@ public class DatabaseCryptoService implements DatabaseCrypto {
 
     @Override
     public Key decrypt(Key key) {
-        StringDecryptor dec = AESFactory.key(dbKeySpecification).stringDecryptor(StandardCharsets.UTF_8);
+        StringDecryptor dec = AES.key(dbKeySpecification).stringDecryptor(StandardCharsets.UTF_8);
         for (Field field : Key.class.getDeclaredFields()) {
             if (field.isAnnotationPresent(Encrypted.class)) {
                 if (field.getType().isAssignableFrom(String.class)) {
@@ -43,7 +44,7 @@ public class DatabaseCryptoService implements DatabaseCrypto {
 
     @Override
     public Key encrypt(Key key) {
-        StringEncryptor enc = AESFactory.key(dbKeySpecification).stringEncryptor(StandardCharsets.UTF_8);
+        StringEncryptor enc = AES.key(dbKeySpecification).stringEncryptor(StandardCharsets.UTF_8);
 
         for (Field field : Key.class.getDeclaredFields()) {
             if (field.isAnnotationPresent(Encrypted.class)) {

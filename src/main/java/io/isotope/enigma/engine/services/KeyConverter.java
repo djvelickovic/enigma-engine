@@ -1,32 +1,29 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
+import io.isotope.enigma.engine.api.KeyMetadata;
 import io.isotope.enigma.engine.domain.Key;
-import io.isotope.enigma.engine.services.aes.KeySpecification;
+import io.isotope.enigma.engine.services.rsa.RSAKeySpecification;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class KeyConverter {
 
-    public static KeySpecification convert(Key key) {
-        KeySpecification keySpecification = new KeySpecification();
-        keySpecification.setKey(b64decode(stringToBytes(key.getKey())));
-        keySpecification.setIv(b64decode(stringToBytes(key.getIv())));
-        return keySpecification;
+    public static RSAKeySpecification convert(Key key) {
+        return RSAKeySpecification.builder()
+                .publicKey(b64decode(stringToBytes(key.getPublicKey())))
+                .privateKey(b64decode(stringToBytes(key.getPrivateKey())))
+                .size(key.getSize())
+                .build();
     }
 
-    public static KeySpecificationReduced convertReduced(Key key) {
-        KeySpecificationReduced keySpecification = new KeySpecificationReduced();
-        keySpecification.setName(key.getName());
-        keySpecification.setCreated(key.getCreated());
-        keySpecification.setUpdated(key.getUpdated());
-        keySpecification.setActive(key.getActive());
-        return keySpecification;
+    public static KeyMetadata convertReduced(Key key) {
+        return KeyMetadata.builder()
+                .name(key.getName())
+                .created(key.getCreated())
+                .updated(key.getUpdated())
+                .active(key.getActive())
+                .build();
     }
 
     public static byte[] b64encode(byte[] value) {

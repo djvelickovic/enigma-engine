@@ -1,6 +1,6 @@
-package io.isotope.enigma.engine.controllers.handlers;
+package io.isotope.enigma.engine.api.handlers;
 
-import io.isotope.enigma.engine.controllers.ErrorResponse;
+import io.isotope.enigma.engine.api.ErrorResponse;
 import io.isotope.enigma.engine.services.exceptions.EnigmaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

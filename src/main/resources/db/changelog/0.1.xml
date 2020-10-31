@@ -8,16 +8,18 @@
         <createTable tableName="key">
             <column name="id" type="varchar(256)" />
             <column name="key_name" type="varchar(256)" />
-            <column name="key_value" type="varchar(1024)"/>
-            <column name="initial_vector" type="varchar(256)"/>
+            <column name="private_key" type="varchar(16348)"/>
+            <column name="public_key" type="varchar(16348)"/>
+            <column name="size" type="int"/>
             <column name="created" type="timestamp with time zone"/>
             <column name="updated" type="timestamp with time zone"/>
             <column name="active" type="boolean"/>
         </createTable>
         <addNotNullConstraint tableName="key" columnName="id"/>
         <addNotNullConstraint tableName="key" columnName="key_name"/>
-        <addNotNullConstraint tableName="key" columnName="key_value"/>
-        <addNotNullConstraint tableName="key" columnName="initial_vector"/>
+        <addNotNullConstraint tableName="key" columnName="private_key"/>
+        <addNotNullConstraint tableName="key" columnName="public_key"/>
+        <addNotNullConstraint tableName="key" columnName="size"/>
         <addNotNullConstraint tableName="key" columnName="created"/>
         <addNotNullConstraint tableName="key" columnName="updated"/>
         <addNotNullConstraint tableName="key" columnName="active"/>

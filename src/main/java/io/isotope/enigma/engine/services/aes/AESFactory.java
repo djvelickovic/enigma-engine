@@ -1,8 +1,7 @@
 package io.isotope.enigma.engine.services.aes;
 
 import io.isotope.enigma.engine.services.crypto.*;
-import io.isotope.enigma.engine.services.exceptions.AesException;
-import org.springframework.stereotype.Service;
+import io.isotope.enigma.engine.services.exceptions.AESException;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -15,22 +14,18 @@ import static io.isotope.enigma.engine.services.aes.AES.*;
 
 public class AESFactory {
 
-    public static AESFactory key(KeySpecification specification) {
-        return new AESFactory(specification);
-    }
-
     private final KeySpecification specification;
 
-    private AESFactory(KeySpecification specification) {
+    public AESFactory(KeySpecification specification) {
         this.specification = specification;
     }
 
     public StringDecryptor stringDecryptor(Charset charset) {
-        return new StringDecryptor(engine(Cipher.DECRYPT_MODE), charset);
+        return new StringDecryptor(cipher(Cipher.DECRYPT_MODE), charset);
     }
 
     public StringEncryptor stringEncryptor(Charset charset) {
-        return new StringEncryptor(engine(Cipher.ENCRYPT_MODE), charset);
+        return new StringEncryptor(cipher(Cipher.ENCRYPT_MODE), charset);
     }
 
     public MapStringDecryptor stringMapDecryptor(Charset charset) {
@@ -40,15 +35,6 @@ public class AESFactory {
     public MapStringEncryptor stringMapEncryptor(Charset charset) {
         return new MapStringEncryptor(stringEncryptor(charset));
     }
-
-    public BytesDecryptor bytesDecryptor() {
-        return new BytesDecryptor(engine(Cipher.DECRYPT_MODE));
-    }
-
-    public BytesEncryptor bytesEncryptor() {
-        return new BytesEncryptor(engine(Cipher.ENCRYPT_MODE));
-    }
-
 
     private Cipher cipher(int cipherMode) {
         if (specification.getIv() == null || specification.getIv().length != BLOCK_SIZE / 8) {
@@ -71,11 +57,7 @@ public class AESFactory {
             cipher.init(cipherMode, secretKeySpec, ivspec);
             return cipher;
         } catch (Exception e) {
-            throw new AesException("Error producing cipher", e);
+            throw new AESException("Error producing cipher", e);
         }
-    }
-
-    private Engine engine(int cipherMode) {
-        return new Engine(cipher(cipherMode));
     }
 }

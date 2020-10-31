@@ -1,7 +1,7 @@
 package io.isotope.enigma.engine.services.debug;
 
 import io.isotope.enigma.engine.config.OnLocalProfile;
-import io.isotope.enigma.engine.controllers.debug.DebugKeySpecification;
+import io.isotope.enigma.engine.api.debug.DebugKeySpecification;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import org.springframework.context.annotation.Conditional;
@@ -31,8 +31,8 @@ public class DebugKeyService {
                     debugKeySpecification.setActive(key.getActive());
                     debugKeySpecification.setCreated(key.getCreated());
                     debugKeySpecification.setUpdated(key.getUpdated());
-                    debugKeySpecification.setIv(key.getIv());
-                    debugKeySpecification.setKey(key.getKey());
+                    debugKeySpecification.setPrivateKey(key.getPrivateKey());
+                    debugKeySpecification.setPublicKey(key.getPublicKey());
                     return debugKeySpecification;
                 });
     }

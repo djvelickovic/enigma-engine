@@ -1,4 +1,4 @@
-package io.isotope.enigma.engine.controllers;
+package io.isotope.enigma.engine.api;
 
 public class ErrorResponse {
     private String code;

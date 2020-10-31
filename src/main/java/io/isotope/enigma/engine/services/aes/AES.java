@@ -28,4 +28,8 @@ public final class AES {
 
         return keySpecification;
     }
+
+    public static AESFactory key(KeySpecification keySpecification) {
+        return new AESFactory(keySpecification);
+    }
 }

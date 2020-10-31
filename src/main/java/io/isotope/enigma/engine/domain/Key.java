@@ -1,5 +1,7 @@
 package io.isotope.enigma.engine.domain;
 
+import lombok.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,6 +10,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "key")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Key {
 
     @Id
@@ -18,12 +25,14 @@ public class Key {
     private String name;
 
     @Encrypted
-    @Column(name = "key_value")
-    private String key;
+    @Column(name = "private_key")
+    private String privateKey;
 
-    @Encrypted
-    @Column(name = "initial_vector")
-    private String iv;
+    @Column(name = "public_key")
+    private String publicKey;
+
+    @Column(name = "size")
+    private Integer size;
 
     @Column(name = "created")
     private LocalDateTime created;
@@ -33,61 +42,4 @@ public class Key {
 
     @Column(name = "active")
     private Boolean active;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-
-    public String getIv() {
-        return iv;
-    }
-
-    public void setIv(String iv) {
-        this.iv = iv;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public LocalDateTime getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(LocalDateTime updated) {
-        this.updated = updated;
-    }
 }

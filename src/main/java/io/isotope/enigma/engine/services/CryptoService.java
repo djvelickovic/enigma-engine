@@ -1,9 +1,11 @@
 package io.isotope.enigma.engine.services;
 
 import io.isotope.enigma.engine.repositories.KeyRepository;
+import io.isotope.enigma.engine.services.aes.AES;
 import io.isotope.enigma.engine.services.aes.AESFactory;
 import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
+import io.isotope.enigma.engine.services.rsa.RSA;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.Charset;
@@ -28,8 +30,8 @@ public class CryptoService {
         return keyRepository.findByNameAndActiveTrue(keyName)
                 .map(databaseCrypto::decrypt)
                 .map(KeyConverter::convert)
-                .map(AESFactory::key)
-                .map(aes -> aes.stringMapEncryptor(StandardCharsets.UTF_8))
+                .map(RSA::key)
+                .map(rsa -> rsa.stringMapEncryptor(StandardCharsets.UTF_8))
                 .map(mapStringEncryptor -> mapStringEncryptor.encrypt(values))
                 .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));
     }
@@ -38,8 +40,8 @@ public class CryptoService {
         return keyRepository.findByNameAndActiveTrue(keyName)
                 .map(databaseCrypto::decrypt)
                 .map(KeyConverter::convert)
-                .map(AESFactory::key)
-                .map(aes -> aes.stringMapDecryptor(StandardCharsets.UTF_8))
+                .map(RSA::key)
+                .map(rsa -> rsa.stringMapDecryptor(StandardCharsets.UTF_8))
                 .map(mapStringEncryptor -> mapStringEncryptor.decrypt(values))
                 .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));
     }

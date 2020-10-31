@@ -1,15 +1,17 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.controllers.KeySpecificationReduced;
+import io.isotope.enigma.engine.api.KeyMetadata;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.repositories.KeyRepository;
-import io.isotope.enigma.engine.services.aes.AES;
-import io.isotope.enigma.engine.services.aes.KeySpecification;
 import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
+import io.isotope.enigma.engine.services.exceptions.RSAException;
+import io.isotope.enigma.engine.services.rsa.RSA;
+import io.isotope.enigma.engine.services.rsa.RSAKeySpecification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -30,14 +32,14 @@ public class KeyService {
         this.databaseCrypto = databaseCrypto;
     }
 
-    public List<KeySpecificationReduced> getAllKeys() {
+    public List<KeyMetadata> getAllKeys() {
         return StreamSupport.stream(keyRepository.findAll().spliterator(), false)
                 .map(KeyConverter::convertReduced)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void generateAndAddKey(String keyName) {
+    public void generateAndAddRSAKey(String keyName) {
         Key key = new Key();
         key.setId(UUID.randomUUID().toString());
         key.setName(keyName);
@@ -45,9 +47,13 @@ public class KeyService {
         key.setCreated(LocalDateTime.now(ZoneId.of("UTC")));
         key.setUpdated(key.getCreated());
 
-        KeySpecification generatedKey = AES.generateKey();
-        key.setKey(bytesToString(b64encode(generatedKey.getKey())));
-        key.setIv(bytesToString(b64encode(generatedKey.getIv())));
+
+        RSAKeySpecification generatedKey = RSA.generateKey()
+                .orElseThrow(() -> new RSAException("Unable to generate rsa key"));
+
+        key.setPublicKey(bytesToString(b64encode(generatedKey.getPublicKey())));
+        key.setPrivateKey(bytesToString(b64encode(generatedKey.getPrivateKey())));
+        key.setSize(generatedKey.getSize());
 
         databaseCrypto.encrypt(key);
         keyRepository.save(key);
