@@ -56,10 +56,6 @@ public class CryptoService {
 
     public Map<String, String> decrypt(Map<String, String> values, String keyName) {
         StringDecryptor rsa = keyRepository.findPrivateKey(keyName)
-                .map(key -> {
-                    System.out.println("KEY "+ key.getPrivateKey());
-                    return key;
-                })
                 .map(key -> KeyAssembler.convert(key, serviceKeySpecification))
                 .map(RSA::of)
                 .map(rsaFactory -> rsaFactory.stringDecryptor(StandardCharsets.UTF_8))
