@@ -1,27 +1,25 @@
 package io.isotope.enigma.engine.config.properties;
 
-import io.isotope.enigma.engine.config.OnLocalProfile;
-import io.isotope.enigma.engine.services.aes.KeySpecification;
+import io.isotope.enigma.engine.services.aes.AESKeySpecification;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.context.annotation.Conditional;
 
 @ConfigurationProperties(prefix = "enigma")
 public class EnigmaProperties {
 
     @NestedConfigurationProperty
-    private KeySpecification keySpecification;
+    private AESKeySpecification AESKeySpecification;
 
     private Boolean encryptDatabase = Boolean.FALSE;
 
     private Integer httpPort = 8081;
 
-    public KeySpecification getKeySpecification() {
-        return keySpecification;
+    public AESKeySpecification getKeySpecification() {
+        return AESKeySpecification;
     }
 
-    public void setKeySpecification(KeySpecification keySpecification) {
-        this.keySpecification = keySpecification;
+    public void setKeySpecification(AESKeySpecification AESKeySpecification) {
+        this.AESKeySpecification = AESKeySpecification;
     }
 
     public Boolean getEncryptDatabase() {

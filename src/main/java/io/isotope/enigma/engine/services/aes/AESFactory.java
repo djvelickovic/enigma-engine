@@ -12,26 +12,30 @@ import java.security.Key;
 import static io.isotope.enigma.engine.services.aes.AES.*;
 
 
-public class AESFactory {
+public class AESFactory implements CryptoFactory {
 
-    private final KeySpecification specification;
+    private final AESKeySpecification specification;
 
-    public AESFactory(KeySpecification specification) {
+    public AESFactory(AESKeySpecification specification) {
         this.specification = specification;
     }
 
+    @Override
     public StringDecryptor stringDecryptor(Charset charset) {
         return new StringDecryptor(cipher(Cipher.DECRYPT_MODE), charset);
     }
 
+    @Override
     public StringEncryptor stringEncryptor(Charset charset) {
         return new StringEncryptor(cipher(Cipher.ENCRYPT_MODE), charset);
     }
 
+    @Override
     public MapStringDecryptor stringMapDecryptor(Charset charset) {
         return new MapStringDecryptor(stringDecryptor(charset));
     }
 
+    @Override
     public MapStringEncryptor stringMapEncryptor(Charset charset) {
         return new MapStringEncryptor(stringEncryptor(charset));
     }

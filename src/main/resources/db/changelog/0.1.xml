@@ -8,6 +8,8 @@
         <createTable tableName="key">
             <column name="id" type="varchar(256)" />
             <column name="key_name" type="varchar(256)" />
+            <column name="block_cipher_mode" type="varchar(256)" />
+            <column name="padding" type="varchar(256)" />
             <column name="private_key" type="varchar(16348)"/>
             <column name="public_key" type="varchar(16348)"/>
             <column name="size" type="int"/>
@@ -17,6 +19,8 @@
         </createTable>
         <addNotNullConstraint tableName="key" columnName="id"/>
         <addNotNullConstraint tableName="key" columnName="key_name"/>
+        <addNotNullConstraint tableName="key" columnName="block_cipher_mode"/>
+        <addNotNullConstraint tableName="key" columnName="padding"/>
         <addNotNullConstraint tableName="key" columnName="private_key"/>
         <addNotNullConstraint tableName="key" columnName="public_key"/>
         <addNotNullConstraint tableName="key" columnName="size"/>

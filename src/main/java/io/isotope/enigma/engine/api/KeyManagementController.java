@@ -29,22 +29,22 @@ public class KeyManagementController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createKey(@RequestBody KeyMetadata keyMetadata) {
+    public ResponseEntity<?> createKey(@RequestBody RSAKeyMetadata RSAKeyMetadata) {
 
-        if (StringUtils.isEmpty(keyMetadata.getName())) {
+        if (StringUtils.isEmpty(RSAKeyMetadata.getName())) {
             throw new EnigmaException("Key cannot be empty");
         }
-        if (!Pattern.matches("([a-zA-Z0-9]+\\.*)+", keyMetadata.getName())) {
+        if (!Pattern.matches("([a-zA-Z0-9]+\\.*)+", RSAKeyMetadata.getName())) {
             throw new EnigmaException("Invalid key pattern. Key name must contain only letters, numbers and dots.");
         }
 
-        keyService.generateAndAddRSAKey(keyMetadata.getName());
+        keyService.storeRSAKey(RSAKeyMetadata.getName());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("{key}")
-    public ResponseEntity<?> updateKey(@PathVariable String key, @RequestBody KeyMetadata keyMetadata) {
-        keyService.updateKey(key, keyMetadata.getActive());
+    public ResponseEntity<?> updateKey(@PathVariable String key, @RequestBody RSAKeyMetadata RSAKeyMetadata) {
+        keyService.updateKey(key, RSAKeyMetadata.getActive());
         return ResponseEntity.ok().build();
     }
 }

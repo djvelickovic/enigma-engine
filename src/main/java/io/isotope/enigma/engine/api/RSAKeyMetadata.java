@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class KeyMetadata {
+public class RSAKeyMetadata {
 
     private String name;
+    private String padding;
+    private String blockCipherMode;
     private LocalDateTime created;
     private LocalDateTime updated;
     private Boolean active;

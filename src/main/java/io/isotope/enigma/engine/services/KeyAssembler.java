@@ -1,13 +1,13 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.api.KeyMetadata;
+import io.isotope.enigma.engine.api.RSAKeyMetadata;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.services.rsa.RSAKeySpecification;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class KeyConverter {
+public class KeyAssembler {
 
     public static RSAKeySpecification convert(Key key) {
         return RSAKeySpecification.builder()
@@ -17,12 +17,14 @@ public class KeyConverter {
                 .build();
     }
 
-    public static KeyMetadata convertReduced(Key key) {
-        return KeyMetadata.builder()
+    public static RSAKeyMetadata convertReduced(Key key) {
+        return RSAKeyMetadata.builder()
                 .name(key.getName())
                 .created(key.getCreated())
                 .updated(key.getUpdated())
                 .active(key.getActive())
+                .blockCipherMode(key.getBlockCipherMode())
+                .padding(key.getPadding())
                 .build();
     }
 

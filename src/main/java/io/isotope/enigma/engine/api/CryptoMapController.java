@@ -40,8 +40,6 @@ public class CryptoMapController {
             @PathVariable("key") String key,
             @RequestBody Map<String, String> body) {
 
-
-        logger.info("Body: {}", body);
         return ResponseEntity.ok()
                 .body(cryptoService.decrypt(body, key));
     }

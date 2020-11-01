@@ -13,7 +13,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import static io.isotope.enigma.engine.services.rsa.RSA.*;
 
-public class RSAFactory {
+public class RSAFactory implements CryptoFactory {
 
     private final RSAKeySpecification specification;
 
@@ -21,18 +21,22 @@ public class RSAFactory {
         this.specification = specification;
     }
 
+    @Override
     public StringDecryptor stringDecryptor(Charset charset) {
         return new StringDecryptor(decryptionCipher(), charset);
     }
 
+    @Override
     public StringEncryptor stringEncryptor(Charset charset) {
         return new StringEncryptor(encryptionCipher(), charset);
     }
 
+    @Override
     public MapStringDecryptor stringMapDecryptor(Charset charset) {
         return new MapStringDecryptor(stringDecryptor(charset));
     }
 
+    @Override
     public MapStringEncryptor stringMapEncryptor(Charset charset) {
         return new MapStringEncryptor(stringEncryptor(charset));
     }

@@ -9,6 +9,8 @@ import lombok.*;
 
 public class RSAKeySpecification {
     private int size;
+    private String padding;
+    private String blockCipherMode;
     private byte[] privateKey;
     private byte[] publicKey;
 }

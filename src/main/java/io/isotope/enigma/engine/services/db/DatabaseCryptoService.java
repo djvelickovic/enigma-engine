@@ -3,8 +3,7 @@ package io.isotope.enigma.engine.services.db;
 import io.isotope.enigma.engine.domain.Encrypted;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.services.aes.AES;
-import io.isotope.enigma.engine.services.aes.AESFactory;
-import io.isotope.enigma.engine.services.aes.KeySpecification;
+import io.isotope.enigma.engine.services.aes.AESKeySpecification;
 import io.isotope.enigma.engine.services.crypto.StringDecryptor;
 import io.isotope.enigma.engine.services.crypto.StringEncryptor;
 import io.isotope.enigma.engine.services.exceptions.EnigmaException;
@@ -14,15 +13,17 @@ import java.nio.charset.StandardCharsets;
 
 public class DatabaseCryptoService implements DatabaseCrypto {
 
-    private final KeySpecification dbKeySpecification;
+    private final AESKeySpecification dbAESKeySpecification;
 
-    public DatabaseCryptoService(KeySpecification dbKeySpecification) {
-        this.dbKeySpecification = dbKeySpecification;
+    public DatabaseCryptoService(AESKeySpecification dbAESKeySpecification) {
+        this.dbAESKeySpecification = dbAESKeySpecification;
     }
 
     @Override
     public Key decrypt(Key key) {
-        StringDecryptor dec = AES.key(dbKeySpecification).stringDecryptor(StandardCharsets.UTF_8);
+        StringDecryptor dec = AES.of(dbAESKeySpecification)
+                .stringDecryptor(StandardCharsets.UTF_8);
+
         for (Field field : Key.class.getDeclaredFields()) {
             if (field.isAnnotationPresent(Encrypted.class)) {
                 if (field.getType().isAssignableFrom(String.class)) {
@@ -44,7 +45,8 @@ public class DatabaseCryptoService implements DatabaseCrypto {
 
     @Override
     public Key encrypt(Key key) {
-        StringEncryptor enc = AES.key(dbKeySpecification).stringEncryptor(StandardCharsets.UTF_8);
+        StringEncryptor enc = AES.of(dbAESKeySpecification)
+                .stringEncryptor(StandardCharsets.UTF_8);
 
         for (Field field : Key.class.getDeclaredFields()) {
             if (field.isAnnotationPresent(Encrypted.class)) {

@@ -31,6 +31,12 @@ public class Key {
     @Column(name = "public_key")
     private String publicKey;
 
+    @Column(name = "padding")
+    private String padding;
+
+    @Column(name = "block_cipher_mode")
+    private String blockCipherMode;
+
     @Column(name = "size")
     private Integer size;
 

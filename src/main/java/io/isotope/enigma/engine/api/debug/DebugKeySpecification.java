@@ -13,6 +13,8 @@ public class DebugKeySpecification {
 
     private String id;
     private String name;
+    private String padding;
+    private String blockCipherMode;
     private String publicKey;
     private String privateKey;
     private LocalDateTime created;
