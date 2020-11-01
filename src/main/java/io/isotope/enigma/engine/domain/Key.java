@@ -8,13 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "key")
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "key")
 public class Key {
 
     @Id
@@ -24,7 +25,6 @@ public class Key {
     @Column(name = "key_name")
     private String name;
 
-    @Encrypted
     @Column(name = "private_key")
     private String privateKey;
 

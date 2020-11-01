@@ -10,8 +10,6 @@ public class EnigmaProperties {
     @NestedConfigurationProperty
     private AESKeySpecification AESKeySpecification;
 
-    private Boolean encryptDatabase = Boolean.FALSE;
-
     private Integer httpPort = 8081;
 
     public AESKeySpecification getKeySpecification() {
@@ -20,14 +18,6 @@ public class EnigmaProperties {
 
     public void setKeySpecification(AESKeySpecification AESKeySpecification) {
         this.AESKeySpecification = AESKeySpecification;
-    }
-
-    public Boolean getEncryptDatabase() {
-        return encryptDatabase;
-    }
-
-    public void setEncryptDatabase(Boolean encryptDatabase) {
-        this.encryptDatabase = encryptDatabase;
     }
 
     public Integer getHttpPort() {

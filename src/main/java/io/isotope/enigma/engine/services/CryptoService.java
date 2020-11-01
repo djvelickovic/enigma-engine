@@ -3,14 +3,10 @@ package io.isotope.enigma.engine.services;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.AES;
 import io.isotope.enigma.engine.services.aes.AESKeySpecification;
-import io.isotope.enigma.engine.services.crypto.MapStringDecryptor;
-import io.isotope.enigma.engine.services.crypto.MapStringEncryptor;
 import io.isotope.enigma.engine.services.crypto.StringDecryptor;
 import io.isotope.enigma.engine.services.crypto.StringEncryptor;
-import io.isotope.enigma.engine.services.db.DatabaseCrypto;
 import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
 import io.isotope.enigma.engine.services.rsa.RSA;
-import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -18,22 +14,20 @@ import java.util.stream.Collectors;
 
 import static io.isotope.enigma.engine.services.KeyAssembler.*;
 
-@Service
 public class CryptoService {
 
     private final KeyRepository keyRepository;
-    private final DatabaseCrypto databaseCrypto;
+    private final AESKeySpecification serviceKeySpecification;
     private final AES aes;
 
-    public CryptoService(KeyRepository keyRepository, DatabaseCrypto databaseCrypto, AES aes) {
+    public CryptoService(KeyRepository keyRepository, AESKeySpecification serviceKeySpecification, AES aes) {
         this.keyRepository = keyRepository;
-        this.databaseCrypto = databaseCrypto;
+        this.serviceKeySpecification = serviceKeySpecification;
         this.aes = aes;
     }
 
     public Map<String, String> encrypt(Map<String, String> values, String keyName) {
-        StringEncryptor rsa = keyRepository.findByNameAndActiveTrue(keyName)
-                .map(databaseCrypto::decrypt)
+        StringEncryptor rsa = keyRepository.findPublicKey(keyName)
                 .map(KeyAssembler::convert)
                 .map(RSA::of)
                 .map(rsaFactory -> rsaFactory.stringEncryptor(StandardCharsets.UTF_8))
@@ -61,9 +55,12 @@ public class CryptoService {
     }
 
     public Map<String, String> decrypt(Map<String, String> values, String keyName) {
-        StringDecryptor rsa = keyRepository.findByNameAndActiveTrue(keyName)
-                .map(databaseCrypto::decrypt)
-                .map(KeyAssembler::convert)
+        StringDecryptor rsa = keyRepository.findPrivateKey(keyName)
+                .map(key -> {
+                    System.out.println("KEY "+ key.getPrivateKey());
+                    return key;
+                })
+                .map(key -> KeyAssembler.convert(key, serviceKeySpecification))
                 .map(RSA::of)
                 .map(rsaFactory -> rsaFactory.stringDecryptor(StandardCharsets.UTF_8))
                 .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));

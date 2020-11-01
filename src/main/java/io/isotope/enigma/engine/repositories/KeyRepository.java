@@ -1,6 +1,9 @@
 package io.isotope.enigma.engine.repositories;
 
 import io.isotope.enigma.engine.domain.Key;
+import io.isotope.enigma.engine.domain.PrivateKeyDTO;
+import io.isotope.enigma.engine.domain.PublicKeyDTO;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
@@ -9,6 +12,10 @@ public interface KeyRepository extends CrudRepository<Key, String> {
 
     Optional<Key> findByName(String keyName);
 
-    Optional<Key> findByNameAndActiveTrue(String keyName);
+    @Query("select new io.isotope.enigma.engine.domain.PrivateKeyDTO(k.name, k.privateKey, k.padding, k.blockCipherMode, k.size) from Key k where k.name = ?1 and k.active = true ")
+    Optional<PrivateKeyDTO> findPrivateKey(String keyName);
+
+    @Query("select new io.isotope.enigma.engine.domain.PublicKeyDTO(k.name, k.publicKey, k.padding, k.blockCipherMode, k.size) from Key k where k.name = ?1 and k.active = true")
+    Optional<PublicKeyDTO> findPublicKey(String keyName);
 
 }

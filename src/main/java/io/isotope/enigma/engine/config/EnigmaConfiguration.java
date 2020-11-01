@@ -1,10 +1,11 @@
 package io.isotope.enigma.engine.config;
 
 import io.isotope.enigma.engine.config.properties.EnigmaProperties;
-import io.isotope.enigma.engine.services.aes.AESFactory;
-import io.isotope.enigma.engine.services.db.DatabaseCrypto;
-import io.isotope.enigma.engine.services.db.DatabaseCryptoMock;
-import io.isotope.enigma.engine.services.db.DatabaseCryptoService;
+import io.isotope.enigma.engine.repositories.KeyRepository;
+import io.isotope.enigma.engine.services.CryptoService;
+import io.isotope.enigma.engine.services.KeyService;
+import io.isotope.enigma.engine.services.aes.AES;
+import io.isotope.enigma.engine.services.rsa.RSA;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +15,12 @@ import org.springframework.context.annotation.Configuration;
 public class EnigmaConfiguration {
 
     @Bean
-    public DatabaseCrypto databaseCrypto(EnigmaProperties enigmaProperties) {
-        if (!enigmaProperties.getEncryptDatabase()) {
-            return new DatabaseCryptoMock();
-        }
-        return new DatabaseCryptoService(enigmaProperties.getKeySpecification());
+    public CryptoService cryptoService(KeyRepository keyRepository, EnigmaProperties enigmaProperties, AES aes) {
+        return new CryptoService(keyRepository, enigmaProperties.getKeySpecification(), aes);
+    }
+
+    @Bean
+    public KeyService keyService(KeyRepository keyRepository, EnigmaProperties enigmaProperties, RSA rsa) {
+        return new KeyService(keyRepository, enigmaProperties.getKeySpecification(), rsa);
     }
 }

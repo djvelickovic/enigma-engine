@@ -15,6 +15,7 @@ public class RSAKeyMetadata {
     private String name;
     private String padding;
     private String blockCipherMode;
+    private Integer size;
     private LocalDateTime created;
     private LocalDateTime updated;
     private Boolean active;
