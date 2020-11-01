@@ -47,9 +47,9 @@ public class CryptoService {
                             .stringEncryptor(StandardCharsets.UTF_8)
                             .encrypt(e.getValue());
 
-                    String b64key = aesKeyB64(aesKey);
-                    String b64Encrypted = rsa.encrypt(b64key);
-                    return Map.entry(e.getKey(), b64Encrypted+"#"+encryptedValue);
+                    String b64AesKey = aesKeyB64(aesKey);
+                    String b64AesEncrypted = rsa.encrypt(b64AesKey);
+                    return Map.entry(e.getKey(), b64AesEncrypted+"#"+encryptedValue);
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
