@@ -10,8 +10,8 @@
             <column name="key_name" type="varchar(256)" />
             <column name="block_cipher_mode" type="varchar(256)" />
             <column name="padding" type="varchar(256)" />
-            <column name="private_key" type="varchar(16348)"/>
-            <column name="public_key" type="varchar(16348)"/>
+            <column name="private_key" type="varchar(32768)"/>
+            <column name="public_key" type="varchar(32768)"/>
             <column name="size" type="int"/>
             <column name="created" type="timestamp with time zone"/>
             <column name="updated" type="timestamp with time zone"/>

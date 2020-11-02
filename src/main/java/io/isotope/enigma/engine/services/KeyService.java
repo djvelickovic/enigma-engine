@@ -41,10 +41,10 @@ public class KeyService {
     }
 
     @Transactional
-    public void storeRSAKey(String keyName) {
+    public void storeRSAKey(String keyName, Integer size) {
         LocalDateTime created = LocalDateTime.now(ZoneId.of("UTC"));
 
-        RSAKeySpecification generatedKey = rsa.generateKey()
+        RSAKeySpecification generatedKey = rsa.generateKey(size)
                 .orElseThrow(() -> new RSAException("Unable to generate rsa key"));
 
         String privateKey = bytesToString(b64encode(generatedKey.getPrivateKey()));
