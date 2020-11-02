@@ -7,6 +7,7 @@ import io.isotope.enigma.engine.services.crypto.StringDecryptor;
 import io.isotope.enigma.engine.services.crypto.StringEncryptor;
 import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
 import io.isotope.enigma.engine.services.rsa.RSA;
+import io.isotope.enigma.engine.services.rsa.RSAKeySpecification;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -27,13 +28,11 @@ public class CryptoService {
     }
 
     public Map<String, String> encrypt(Map<String, String> values, String keyName) {
-        StringEncryptor rsa = keyRepository.findPublicKey(keyName)
+        RSAKeySpecification rsaKey = keyRepository.findPublicKey(keyName)
                 .map(KeyAssembler::convert)
-                .map(RSA::of)
-                .map(rsaFactory -> rsaFactory.stringEncryptor(StandardCharsets.UTF_8))
                 .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));
 
-        return values.entrySet().stream()
+        return values.entrySet().parallelStream()
                 .map(e -> {
                     AESKeySpecification aesKey = aes.generateKey();
 
@@ -42,7 +41,7 @@ public class CryptoService {
                             .encrypt(e.getValue());
 
                     String b64AesKey = aesKeyB64(aesKey);
-                    String b64AesEncrypted = rsa.encrypt(b64AesKey);
+                    String b64AesEncrypted = RSA.of(rsaKey).stringEncryptor(StandardCharsets.UTF_8).encrypt(b64AesKey);
                     return Map.entry(e.getKey(), b64AesEncrypted+"#"+encryptedValue);
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -55,18 +54,16 @@ public class CryptoService {
     }
 
     public Map<String, String> decrypt(Map<String, String> values, String keyName) {
-        StringDecryptor rsa = keyRepository.findPrivateKey(keyName)
+        RSAKeySpecification rsaKey = keyRepository.findPrivateKey(keyName)
                 .map(key -> KeyAssembler.convert(key, serviceKeySpecification))
-                .map(RSA::of)
-                .map(rsaFactory -> rsaFactory.stringDecryptor(StandardCharsets.UTF_8))
                 .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));
 
-        return values.entrySet().stream()
+        return values.entrySet().parallelStream()
                 .map(e -> {
                     String[] split  = e.getValue().split("#");
                     String encAesKey = split[0];
 
-                    String decAesKey = rsa.decrypt(encAesKey);
+                    String decAesKey = RSA.of(rsaKey).stringDecryptor(StandardCharsets.UTF_8).decrypt(encAesKey);
                     String[] aesParts = decAesKey.split("\\.");
                     byte[] key = b64decode(stringToBytes(aesParts[0]));
                     byte[] iv = b64decode(stringToBytes(aesParts[1]));
