@@ -7,10 +7,11 @@ public final class AES {
     private static final SecureRandom secureRandom = new SecureRandom();
 
     public static final String NAME = "AES";
-    public static final String BLOCK_MODE = "CBC";
-    public static final String PADDING = "PKCS7Padding";
-    public static final Integer AES_KEY_LENGTH = 256;
     public static final Integer BLOCK_SIZE = 128;
+
+    private static final String BLOCK_MODE = "CBC";
+    private static final String PADDING = "PKCS7Padding";
+    private static final Integer AES_KEY_LENGTH = 256;
 
     public static AESFactory of(AESKeySpecification AESKeySpecification) {
         return new AESFactory(AESKeySpecification);
@@ -29,6 +30,9 @@ public final class AES {
         return AESKeySpecification.builder()
                 .key(key)
                 .iv(iv)
+                .blockCipherMode(BLOCK_MODE)
+                .padding(PADDING)
+                .size(AES_KEY_LENGTH)
                 .build();
     }
 }

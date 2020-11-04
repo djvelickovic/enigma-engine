@@ -46,7 +46,7 @@ public class CryptoService {
     public String aesKeyB64(AESKeySpecification aesKey) {
         String key = bytesToString(b64encode(aesKey.getKey()));
         String iv = bytesToString(b64encode(aesKey.getIv()));
-        return key + "." + iv;
+        return String.join(".", key, iv, aesKey.getBlockCipherMode(), aesKey.getPadding(), Integer.toString(aesKey.getSize()));
     }
 
     public Map<String, String> decrypt(Map<String, String> values, String keyName) {
@@ -67,6 +67,9 @@ public class CryptoService {
                     AESKeySpecification aesKey = AESKeySpecification.builder()
                             .key(key)
                             .iv(iv)
+                            .blockCipherMode(aesParts[2])
+                            .padding(aesParts[3])
+                            .size(Integer.parseInt(aesParts[4]))
                             .build();
 
                     String decryptedValue = AES.of(aesKey)

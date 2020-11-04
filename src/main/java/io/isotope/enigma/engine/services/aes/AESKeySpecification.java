@@ -9,6 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 public class AESKeySpecification {
 
+    private int size;
+    private String padding;
+    private String blockCipherMode;
     private byte[] key;
     private byte[] iv;
 

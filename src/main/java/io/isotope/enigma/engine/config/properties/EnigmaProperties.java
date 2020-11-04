@@ -8,16 +8,16 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class EnigmaProperties {
 
     @NestedConfigurationProperty
-    private AESKeySpecification AESKeySpecification;
+    private AESKeySpecification keySpecification;
 
     private Integer httpPort = 8081;
 
     public AESKeySpecification getKeySpecification() {
-        return AESKeySpecification;
+        return keySpecification;
     }
 
-    public void setKeySpecification(AESKeySpecification AESKeySpecification) {
-        this.AESKeySpecification = AESKeySpecification;
+    public void setKeySpecification(AESKeySpecification keySpecification) {
+        this.keySpecification = keySpecification;
     }
 
     public Integer getHttpPort() {
