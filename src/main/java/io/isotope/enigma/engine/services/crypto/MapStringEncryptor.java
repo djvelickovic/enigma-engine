@@ -4,11 +4,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MapStringEncryptor implements Encryptor<Map<String, String>, Map<String, String>> {
+public class MapStringEncryptor implements Encryptor<Map<String, String>> {
 
-    private final StringEncryptor stringEncryptor;
+    private final Encryptor<String> stringEncryptor;
 
-    public MapStringEncryptor(StringEncryptor stringEncryptor) {
+    public MapStringEncryptor(Encryptor<String> stringEncryptor) {
         this.stringEncryptor = stringEncryptor;
     }
 

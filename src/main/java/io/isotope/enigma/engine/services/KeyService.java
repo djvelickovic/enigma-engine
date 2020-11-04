@@ -26,12 +26,10 @@ public class KeyService {
 
     private final KeyRepository keyRepository;
     private final AESKeySpecification serviceKeySpecification;
-    private final RSA rsa;
 
-    public KeyService(KeyRepository keyRepository, AESKeySpecification serviceKeySpecification, RSA rsa) {
+    public KeyService(KeyRepository keyRepository, AESKeySpecification serviceKeySpecification) {
         this.keyRepository = keyRepository;
         this.serviceKeySpecification = serviceKeySpecification;
-        this.rsa = rsa;
     }
 
     public List<RSAKeyMetadata> getAllKeys() {
@@ -44,7 +42,7 @@ public class KeyService {
     public void storeRSAKey(String keyName, Integer size) {
         LocalDateTime created = LocalDateTime.now(ZoneId.of("UTC"));
 
-        RSAKeySpecification generatedKey = rsa.generateKey(size)
+        RSAKeySpecification generatedKey = RSA.generateKey(size)
                 .orElseThrow(() -> new RSAException("Unable to generate rsa key"));
 
         String privateKey = bytesToString(b64encode(generatedKey.getPrivateKey()));

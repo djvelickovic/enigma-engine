@@ -1,13 +1,14 @@
 package io.isotope.enigma.engine.services.crypto;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
 public interface CryptoFactory {
 
-    StringDecryptor stringDecryptor(Charset charset);
-    StringEncryptor stringEncryptor(Charset charset);
+    Decryptor<String> stringDecryptor(Charset charset);
+    Encryptor<String> stringEncryptor(Charset charset);
 
-    MapStringDecryptor stringMapDecryptor(Charset charset);
-    MapStringEncryptor stringMapEncryptor(Charset charset);
+    Decryptor<Map<String, String>> stringMapDecryptor(Charset charset);
+    Encryptor<Map<String, String>> stringMapEncryptor(Charset charset);
 
 }

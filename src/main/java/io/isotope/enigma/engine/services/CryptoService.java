@@ -3,8 +3,6 @@ package io.isotope.enigma.engine.services;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.AES;
 import io.isotope.enigma.engine.services.aes.AESKeySpecification;
-import io.isotope.enigma.engine.services.crypto.StringDecryptor;
-import io.isotope.enigma.engine.services.crypto.StringEncryptor;
 import io.isotope.enigma.engine.services.exceptions.KeyNotFoundException;
 import io.isotope.enigma.engine.services.rsa.RSA;
 import io.isotope.enigma.engine.services.rsa.RSAKeySpecification;
@@ -19,12 +17,10 @@ public class CryptoService {
 
     private final KeyRepository keyRepository;
     private final AESKeySpecification serviceKeySpecification;
-    private final AES aes;
 
-    public CryptoService(KeyRepository keyRepository, AESKeySpecification serviceKeySpecification, AES aes) {
+    public CryptoService(KeyRepository keyRepository, AESKeySpecification serviceKeySpecification) {
         this.keyRepository = keyRepository;
         this.serviceKeySpecification = serviceKeySpecification;
-        this.aes = aes;
     }
 
     public Map<String, String> encrypt(Map<String, String> values, String keyName) {
@@ -34,7 +30,7 @@ public class CryptoService {
 
         return values.entrySet().parallelStream()
                 .map(e -> {
-                    AESKeySpecification aesKey = aes.generateKey();
+                    AESKeySpecification aesKey = AES.generateKey();
 
                     String encryptedValue = AES.of(aesKey)
                             .stringEncryptor(StandardCharsets.UTF_8)

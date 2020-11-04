@@ -3,13 +3,10 @@ package io.isotope.enigma.engine.services.crypto;
 import io.isotope.enigma.engine.services.exceptions.EngineException;
 
 import javax.crypto.Cipher;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Base64;
 
-public class StringEncryptor implements Encryptor<String, String> {
+public class StringEncryptor implements Encryptor<String> {
 
     private final Cipher cipher;
     private final Charset charset;

@@ -8,7 +8,8 @@ import org.springframework.util.StopWatch;
 import java.security.*;
 import java.util.Optional;
 
-import static java.util.Optional.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 @Service
 public class RSA {
@@ -16,7 +17,6 @@ public class RSA {
     private static final Logger logger = LoggerFactory.getLogger(RSA.class);
     private static final SecureRandom secureRandom = new SecureRandom();
 
-    // MOVE THIS TO CONFIGURATION
     public static final String NAME = "RSA";
     public static final String BLOCK_MODE = "ECB";
     public static final String PADDING = "OAEPWithSHA-512AndMGF1Padding";
@@ -28,7 +28,7 @@ public class RSA {
 
     private RSA() { }
 
-    public Optional<RSAKeySpecification> generateKey(Integer size) {
+    public static Optional<RSAKeySpecification> generateKey(Integer size) {
 
         try {
             StopWatch sw = new StopWatch();

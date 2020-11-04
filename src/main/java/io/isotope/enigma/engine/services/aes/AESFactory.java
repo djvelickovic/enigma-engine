@@ -8,6 +8,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.security.Key;
+import java.util.Map;
 
 import static io.isotope.enigma.engine.services.aes.AES.*;
 
@@ -21,22 +22,22 @@ public class AESFactory implements CryptoFactory {
     }
 
     @Override
-    public StringDecryptor stringDecryptor(Charset charset) {
+    public Decryptor<String> stringDecryptor(Charset charset) {
         return new StringDecryptor(cipher(Cipher.DECRYPT_MODE), charset);
     }
 
     @Override
-    public StringEncryptor stringEncryptor(Charset charset) {
+    public Encryptor<String> stringEncryptor(Charset charset) {
         return new StringEncryptor(cipher(Cipher.ENCRYPT_MODE), charset);
     }
 
     @Override
-    public MapStringDecryptor stringMapDecryptor(Charset charset) {
+    public Decryptor<Map<String, String>> stringMapDecryptor(Charset charset) {
         return new MapStringDecryptor(stringDecryptor(charset));
     }
 
     @Override
-    public MapStringEncryptor stringMapEncryptor(Charset charset) {
+    public Encryptor<Map<String, String>> stringMapEncryptor(Charset charset) {
         return new MapStringEncryptor(stringEncryptor(charset));
     }
 

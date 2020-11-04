@@ -1,16 +1,14 @@
 package io.isotope.enigma.engine.services.crypto;
 
-import org.slf4j.Logger;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MapStringDecryptor implements Decryptor<Map<String, String>, Map<String, String>> {
+public class MapStringDecryptor implements Decryptor<Map<String, String>> {
 
-    private final StringDecryptor stringDecryptor;
+    private final Decryptor<String> stringDecryptor;
 
-    public MapStringDecryptor(StringDecryptor stringDecryptor) {
+    public MapStringDecryptor(Decryptor<String> stringDecryptor) {
         this.stringDecryptor = stringDecryptor;
     }
 

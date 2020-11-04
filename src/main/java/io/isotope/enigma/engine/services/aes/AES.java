@@ -1,10 +1,7 @@
 package io.isotope.enigma.engine.services.aes;
 
-import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
 
-@Service
 public final class AES {
 
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -21,7 +18,7 @@ public final class AES {
 
     private AES() { }
 
-    public AESKeySpecification generateKey() {
+    public static AESKeySpecification generateKey() {
 
         byte[] key = new byte[AES_KEY_LENGTH / 8];
         byte[] iv = new byte[BLOCK_SIZE / 8];

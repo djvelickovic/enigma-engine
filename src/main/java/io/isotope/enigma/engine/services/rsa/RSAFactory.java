@@ -10,6 +10,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Map;
 
 import static io.isotope.enigma.engine.services.rsa.RSA.*;
 
@@ -22,22 +23,22 @@ public class RSAFactory implements CryptoFactory {
     }
 
     @Override
-    public StringDecryptor stringDecryptor(Charset charset) {
+    public Decryptor<String> stringDecryptor(Charset charset) {
         return new StringDecryptor(decryptionCipher(), charset);
     }
 
     @Override
-    public StringEncryptor stringEncryptor(Charset charset) {
+    public Encryptor<String> stringEncryptor(Charset charset) {
         return new StringEncryptor(encryptionCipher(), charset);
     }
 
     @Override
-    public MapStringDecryptor stringMapDecryptor(Charset charset) {
+    public Decryptor<Map<String, String>> stringMapDecryptor(Charset charset) {
         return new MapStringDecryptor(stringDecryptor(charset));
     }
 
     @Override
-    public MapStringEncryptor stringMapEncryptor(Charset charset) {
+    public Encryptor<Map<String, String>> stringMapEncryptor(Charset charset) {
         return new MapStringEncryptor(stringEncryptor(charset));
     }
 
