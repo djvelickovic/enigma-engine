@@ -1,5 +1,6 @@
 package io.isotope.enigma.engine.api;
 
+import io.isotope.enigma.engine.domain.KeyMetadataDTO;
 import io.isotope.enigma.engine.services.KeyService;
 import io.isotope.enigma.engine.services.exceptions.EnigmaException;
 import org.slf4j.Logger;
@@ -29,22 +30,22 @@ public class KeyManagementController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createKey(@RequestBody RSAKeyMetadata rsaKeyMetadata) {
+    public ResponseEntity<?> createKey(@RequestBody KeyMetadataDTO keyMetadataDTO) {
 
-        if (StringUtils.isEmpty(rsaKeyMetadata.getName())) {
+        if (StringUtils.isEmpty(keyMetadataDTO.getName())) {
             throw new EnigmaException("Key cannot be empty");
         }
-        if (!Pattern.matches("([a-zA-Z0-9]+\\.*)+", rsaKeyMetadata.getName())) {
+        if (!Pattern.matches("([a-zA-Z0-9]+\\.*)+", keyMetadataDTO.getName())) {
             throw new EnigmaException("Invalid key pattern. Key name must contain only letters, numbers and dots.");
         }
 
-        keyService.storeRSAKey(rsaKeyMetadata.getName(), rsaKeyMetadata.getSize());
+        keyService.createRSAKey(keyMetadataDTO.getName(), keyMetadataDTO.getSize());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("{key}")
-    public ResponseEntity<?> updateKey(@PathVariable String key, @RequestBody RSAKeyMetadata RSAKeyMetadata) {
-        keyService.updateKey(key, RSAKeyMetadata.getActive());
+    public ResponseEntity<?> updateKey(@PathVariable String key, @RequestBody KeyMetadataDTO keyMetadataDTO) {
+        keyService.updateKey(key, keyMetadataDTO.getActive());
         return ResponseEntity.ok().build();
     }
 }

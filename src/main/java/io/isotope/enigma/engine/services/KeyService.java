@@ -1,7 +1,7 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.api.RSAKeyMetadata;
 import io.isotope.enigma.engine.domain.Key;
+import io.isotope.enigma.engine.domain.KeyMetadataDTO;
 import io.isotope.enigma.engine.repositories.KeyRepository;
 import io.isotope.enigma.engine.services.aes.AES;
 import io.isotope.enigma.engine.services.aes.AESKeySpecification;
@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static io.isotope.enigma.engine.services.KeyAssembler.b64encode;
 import static io.isotope.enigma.engine.services.KeyAssembler.bytesToString;
@@ -32,14 +30,12 @@ public class KeyService {
         this.serviceKeySpecification = serviceKeySpecification;
     }
 
-    public List<RSAKeyMetadata> getAllKeys() {
-        return StreamSupport.stream(keyRepository.findAll().spliterator(), false)
-                .map(KeyAssembler::convertReduced)
-                .collect(Collectors.toList());
+    public List<KeyMetadataDTO> getAllKeys() {
+        return keyRepository.getAllKeysMetadata();
     }
 
     @Transactional
-    public void storeRSAKey(String keyName, Integer size) {
+    public void createRSAKey(String keyName, Integer size) {
         LocalDateTime created = LocalDateTime.now(ZoneId.of("UTC"));
 
         RSAKeySpecification generatedKey = RSA.generateKey(size)

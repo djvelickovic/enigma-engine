@@ -1,4 +1,4 @@
-package io.isotope.enigma.engine.api;
+package io.isotope.enigma.engine.domain;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RSAKeyMetadata {
+public class KeyMetadataDTO {
 
     private String name;
     private String padding;

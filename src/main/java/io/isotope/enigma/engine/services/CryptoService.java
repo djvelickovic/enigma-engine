@@ -36,31 +36,55 @@ public class CryptoService {
                             .stringEncryptor(StandardCharsets.UTF_8)
                             .encrypt(e.getValue());
 
-                    String b64AesKey = aesKeyB64(aesKey);
-                    String b64AesEncrypted = RSA.of(rsaKey).stringEncryptor(StandardCharsets.UTF_8).encrypt(b64AesKey);
-                    return Map.entry(e.getKey(), b64AesEncrypted+"#"+encryptedValue);
+                    String key = bytesToString(b64encode(aesKey.getKey()));
+                    String iv = bytesToString(b64encode(aesKey.getIv()));
+
+                    String b64AesKey = String.join(".",
+                            key,
+                            iv,
+                            aesKey.getBlockCipherMode(),
+                            aesKey.getPadding(),
+                            Integer.toString(aesKey.getSize())
+                    );
+
+                    String b64AesEncrypted = RSA.of(rsaKey)
+                            .stringEncryptor(StandardCharsets.UTF_8)
+                            .encrypt(b64AesKey);
+
+                    String keyB64 = encodeKey(keyName);
+
+                    return Map.entry(
+                            e.getKey(),
+                            String.join(".",
+                                    keyB64,
+                                    b64AesEncrypted,
+                                    encryptedValue
+                            )
+                    );
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public String aesKeyB64(AESKeySpecification aesKey) {
-        String key = bytesToString(b64encode(aesKey.getKey()));
-        String iv = bytesToString(b64encode(aesKey.getIv()));
-        return String.join(".", key, iv, aesKey.getBlockCipherMode(), aesKey.getPadding(), Integer.toString(aesKey.getSize()));
-    }
-
-    public Map<String, String> decrypt(Map<String, String> values, String keyName) {
-        RSAKeySpecification rsaKey = keyRepository.findPrivateKey(keyName)
-                .map(key -> KeyAssembler.convert(key, serviceKeySpecification))
-                .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));
-
+    public Map<String, String> decrypt(Map<String, String> values) {
         return values.entrySet().parallelStream()
                 .map(e -> {
-                    String[] split  = e.getValue().split("#");
-                    String encAesKey = split[0];
+                    String[] split  = e.getValue().split("\\.");
+                    String keyB64 = split[0];
+                    String encAesKey = split[1];
+                    String encValue = split[2];
 
-                    String decAesKey = RSA.of(rsaKey).stringDecryptor(StandardCharsets.UTF_8).decrypt(encAesKey);
+                    String keyName = decodeKey(keyB64);
+
+                    RSAKeySpecification rsaKey = keyRepository.findPrivateKey(keyName)
+                            .map(key -> KeyAssembler.convert(key, serviceKeySpecification))
+                            .orElseThrow(() -> new KeyNotFoundException("No key found with name " + keyName));
+
+                    String decAesKey = RSA.of(rsaKey)
+                            .stringDecryptor(StandardCharsets.UTF_8)
+                            .decrypt(encAesKey);
+
                     String[] aesParts = decAesKey.split("\\.");
+
                     byte[] key = b64decode(stringToBytes(aesParts[0]));
                     byte[] iv = b64decode(stringToBytes(aesParts[1]));
 
@@ -74,10 +98,18 @@ public class CryptoService {
 
                     String decryptedValue = AES.of(aesKey)
                             .stringDecryptor(StandardCharsets.UTF_8)
-                            .decrypt(split[1]);
+                            .decrypt(encValue);
 
                     return Map.entry(e.getKey(), decryptedValue);
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public static String encodeKey(String keyName) {
+        return bytesToString(b64encode(stringToBytes(keyName)));
+    }
+
+    public static String decodeKey(String keyB64) {
+        return bytesToString(b64decode(stringToBytes(keyB64)));
     }
 }

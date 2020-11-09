@@ -46,10 +46,10 @@ public class RSAFactory implements CryptoFactory {
         try {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(specification.getPublicKey());
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
 
-            Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", NAME, BLOCK_MODE, PADDING));
+            Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", RSA, BLOCK_MODE, PADDING));
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return cipher;
         } catch (Exception e) {
@@ -61,10 +61,10 @@ public class RSAFactory implements CryptoFactory {
         try {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(specification.getPrivateKey());
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA);
             PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
 
-            Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", NAME, BLOCK_MODE, PADDING));
+            Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", RSA, BLOCK_MODE, PADDING));
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return cipher;
         } catch (Exception e) {

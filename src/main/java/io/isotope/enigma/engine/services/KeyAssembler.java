@@ -1,6 +1,6 @@
 package io.isotope.enigma.engine.services;
 
-import io.isotope.enigma.engine.api.RSAKeyMetadata;
+import io.isotope.enigma.engine.domain.KeyMetadataDTO;
 import io.isotope.enigma.engine.domain.Key;
 import io.isotope.enigma.engine.domain.PrivateKeyDTO;
 import io.isotope.enigma.engine.domain.PublicKeyDTO;
@@ -27,18 +27,6 @@ public class KeyAssembler {
     public static RSAKeySpecification convert(PublicKeyDTO key) {
         return RSAKeySpecification.builder()
                 .publicKey(b64decode(stringToBytes(key.getPublicKey())))
-                .size(key.getSize())
-                .build();
-    }
-
-    public static RSAKeyMetadata convertReduced(Key key) {
-        return RSAKeyMetadata.builder()
-                .name(key.getName())
-                .created(key.getCreated())
-                .updated(key.getUpdated())
-                .active(key.getActive())
-                .blockCipherMode(key.getBlockCipherMode())
-                .padding(key.getPadding())
                 .size(key.getSize())
                 .build();
     }

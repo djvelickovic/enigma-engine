@@ -35,12 +35,9 @@ public class CryptoMapController {
                 .body(cryptoService.encrypt(body, key));
     }
 
-    @PostMapping(path = "/decrypt/{key}")
-    public ResponseEntity<Map<String, String>> decrypt(
-            @PathVariable("key") String key,
-            @RequestBody Map<String, String> body) {
-
+    @PostMapping(path = "/decrypt")
+    public ResponseEntity<Map<String, String>> decrypt(@RequestBody Map<String, String> body) {
         return ResponseEntity.ok()
-                .body(cryptoService.decrypt(body, key));
+                .body(cryptoService.decrypt(body));
     }
 }

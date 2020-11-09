@@ -9,4 +9,3 @@ spring:
     name: Enigma
 enigma:
   http-port: 11080
-  encrypt-database: false

@@ -17,10 +17,10 @@ public class RSA {
     private static final Logger logger = LoggerFactory.getLogger(RSA.class);
     private static final SecureRandom secureRandom = new SecureRandom();
 
-    public static final String NAME = "RSA";
+    public static final String RSA = "RSA";
     public static final String BLOCK_MODE = "ECB";
     public static final String PADDING = "OAEPWithSHA-512AndMGF1Padding";
-    public static final int DEFAULT_RSA_KEY_LENGTH = 4096;
+    public static final int RSA_4096 = 4096;
 
     public static RSAFactory of(RSAKeySpecification rsaKeySpecification) {
         return new RSAFactory(rsaKeySpecification);
@@ -29,14 +29,13 @@ public class RSA {
     private RSA() { }
 
     public static Optional<RSAKeySpecification> generateKey(Integer size) {
-
         try {
             StopWatch sw = new StopWatch();
             sw.start();
 
-            int keySize = ofNullable(size).orElse(DEFAULT_RSA_KEY_LENGTH);
+            int keySize = ofNullable(size).orElse(RSA_4096);
 
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance(NAME);
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance(RSA);
             kpg.initialize(keySize, secureRandom);
             KeyPair keyPair = kpg.generateKeyPair();
 
@@ -60,6 +59,4 @@ public class RSA {
             return empty();
         }
     }
-
-
 }

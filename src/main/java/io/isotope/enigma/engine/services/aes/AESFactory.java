@@ -42,8 +42,6 @@ public class AESFactory implements CryptoFactory {
     }
 
     private Cipher cipher(int cipherMode) {
-        System.out.println();
-
         if (specification.getIv() == null || specification.getIv().length != BLOCK_SIZE / 8) {
             throw new IllegalArgumentException("Initial vector length must be " + BLOCK_SIZE / 8);
         }
@@ -58,9 +56,14 @@ public class AESFactory implements CryptoFactory {
 
         try {
             IvParameterSpec ivspec = new IvParameterSpec(specification.getIv());
-            Key secretKeySpec = new SecretKeySpec(specification.getKey(), AES.NAME);
+            Key secretKeySpec = new SecretKeySpec(specification.getKey(), AES);
 
-            Cipher cipher = Cipher.getInstance(String.format("%s/%s/%s", NAME, specification.getBlockCipherMode(), specification.getPadding()));
+            Cipher cipher = Cipher.getInstance(
+                    String.format("%s/%s/%s",
+                            AES,
+                            specification.getBlockCipherMode(),
+                            specification.getPadding()));
+
             cipher.init(cipherMode, secretKeySpec, ivspec);
             return cipher;
         } catch (Exception e) {
