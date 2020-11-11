@@ -26,3 +26,8 @@ keytool -import -alias enigmaserver -file enigmaserver.crt -keystore enigmaclien
 keytool -import -alias server -file server.crt -keystore enigmaserver.p12 -storepass 2secure4u -noprompt
 keytool -import -alias server -file server.crt -keystore enigmabackoffice.p12 -storepass 2secure4u -noprompt
 keytool -import -alias server -file server.crt -keystore enigmaclient.p12 -storepass 2secure4u -noprompt
+
+
+openssl pkcs12 -in enigmaclient.p12 -nocerts -nodes -out enigmaclient.pem
+openssl pkcs12 -in enigmaclient.p12 -clcerts -nokeys -nodes -out enigmaclient.pub
+openssl pkcs12 -in enigmaserver.p12 -clcerts -nokeys -nodes -out enigmaserver.pub
